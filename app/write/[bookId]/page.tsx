@@ -263,12 +263,26 @@ export default function ChapterManagerPage() {
             </div>
           )}
           <div>
-            <h1 className="font-display text-2xl font-bold text-foreground">
-              {book.title}
-            </h1>
-            <p className="mt-0.5 text-sm text-muted-foreground">
-              {book.genre} - {chapters.length} chapters
-            </p>
+            <div className="flex items-center gap-3">
+              <div className="flex-1">
+                <h1 className="font-display text-2xl font-bold text-foreground">
+                  {book.title}
+                </h1>
+                <p className="mt-0.5 text-sm text-muted-foreground">
+                  {book.genre} - {chapters.length} chapters
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Link href={`/write/${bookId}/edit`}>
+                  <Button variant="outline" className="text-foreground hover:bg-secondary">
+                    Edit details
+                  </Button>
+                </Link>
+              </div>
+
+            </div>
+
             <Badge
               className={`mt-2 border-0 text-[11px] ${
                 book.status === "published"
