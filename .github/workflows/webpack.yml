@@ -24,6 +24,5 @@ jobs:
 
     - name: Build
       run: |
-        pnpm install
         pnpm run build
         pnpm run dev
