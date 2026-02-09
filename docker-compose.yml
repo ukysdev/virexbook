@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: virexbooks:latest
+    restart: unless-stopped
+    env_file:
+      - .env.local
+    ports:
+      - "3000:3000"
+    # This configuration runs the dev server inside the container.
+    # It mounts the project for hot-reload and executes `pnpm dev`.
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    command: ["pnpm", "dev"]
+    environment:
+      - NODE_ENV=development
+
+# Optional: add services like a local Postgres or Supabase emulator here if needed.
