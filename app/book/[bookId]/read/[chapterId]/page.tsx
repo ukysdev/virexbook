@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ShareButton } from "@/components/share-button"
+import TTSButton from "@/components/tts-button"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { useEffect, useState, useCallback } from "react"
@@ -172,12 +173,15 @@ export default function ReaderPage() {
                 {chapter.word_count} words
               </p>
             </div>
-            <ShareButton
-              title={`${chapter.title} - ${book.title}`}
-              description={`Kapitel ${currentIndex + 1} von "${book.title}"`}
-              url={typeof window !== "undefined" ? window.location.href : ""}
-              variant="outline"
-            />
+            <div className="flex items-center gap-3">
+              <TTSButton text={chapter.content || ""} />
+              <ShareButton
+                title={`${chapter.title} - ${book.title}`}
+                description={`Chapter ${currentIndex + 1} of "${book.title}"`}
+                url={typeof window !== "undefined" ? window.location.href : ""}
+                variant="outline"
+              />
+            </div>
           </div>
         </div>
 

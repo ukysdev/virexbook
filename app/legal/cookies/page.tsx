@@ -2,74 +2,67 @@ import type { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "Cookies | VirexBooks",
-  description: "Cookie-Richtlinie von VirexBooks",
+  description: "Cookie Policy of VirexBooks",
   robots: "index, follow",
 }
 
 export default function CookiesPage() {
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Cookie-Richtlinie</h1>
+      <h1 className="text-3xl font-bold">Cookie Policy</h1>
 
       <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">Was sind Cookies?</h2>
+        <h2 className="text-2xl font-semibold">What are Cookies?</h2>
         <div className="space-y-2 text-sm">
           <p>
-            Cookies sind kleine Textdateien, die auf Ihrem Gerät (Computer, Tablet
-            oder Mobiltelefon) gespeichert werden, wenn Sie eine Website besuchen.
-            Sie ermöglichen es der Website, sich Informationen über Ihren Besuch
-            zu merken, wie zum Beispiel Ihre bevorzugte Sprache und andere
-            Einstellungen.
+            Cookies are small text files that are stored on your device (computer, tablet,
+            or mobile phone) when you visit a website. They allow the website to remember
+            information about your visit, such as your preferred language and other settings.
           </p>
           <p>
-            Cookies richten auf Ihrem Gerät keinen Schaden an und enthalten keine
-            Viren. Dies sind legitime Technologien, die von den meisten Websites
-            verwendet werden.
+            Cookies do not cause any harm to your device and do not contain viruses. These
+            are legitimate technologies used by most websites.
           </p>
         </div>
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">Welche Cookies verwenden wir?</h2>
+        <h2 className="text-2xl font-semibold">Which Cookies Do We Use?</h2>
 
         <div className="space-y-4">
           <div>
-            <h3 className="font-semibold text-sm mb-2">Notwendige Cookies</h3>
+            <h3 className="font-semibold text-sm mb-2">Essential Cookies</h3>
             <p className="text-sm">
-              Diese Cookies sind erforderlich, damit die Website funktioniert.
-              Sie können nicht deaktiviert werden, da die Website sonst nicht richtig
-              funktioniert. Sie werden beispielsweise für die Authentifizierung und
-              den Schutz vor Betrug verwendet.
+              These cookies are required for the website to work properly. They cannot be
+              disabled, as the website will not function correctly otherwise. They are used,
+              for example, for authentication and fraud protection.
             </p>
           </div>
 
           <div>
-            <h3 className="font-semibold text-sm mb-2">Funktionale Cookies</h3>
+            <h3 className="font-semibold text-sm mb-2">Functional Cookies</h3>
             <p className="text-sm">
-              Diese Cookies ermöglichen erweiterte Funktionalität und werden
-              verwendet, um sich an Ihre Präferenzen zu erinnern (z.B. Sprache,
-              Seitengröße, Filtereinstellungen). Sie erleichtern Ihren nächsten
-              Besuch auf der Website.
+              These cookies enable advanced functionality and are used to remember your
+              preferences (e.g., language, page size, filter settings). They make your next
+              visit to the website easier.
             </p>
           </div>
 
           <div>
-            <h3 className="font-semibold text-sm mb-2">Analytische Cookies</h3>
+            <h3 className="font-semibold text-sm mb-2">Analytics Cookies</h3>
             <p className="text-sm">
-              Diese Cookies helfen uns zu verstehen, wie Nutzer unsere Website nutzen.
-              Wir erfassen Informationen wie die Anzahl der Besucher, die besuchten
-              Seiten und wie lange Sie die Website nutzen. Diese Informationen
-              helfen uns, unsere Website zu verbessern. Die gesammelten Daten werden
-              anonymisiert und können nicht zu Ihnen zurückverfolgt werden.
+              These cookies help us understand how users interact with our website. We collect
+              information such as the number of visitors, pages visited, and how long you use
+              the website. This information helps us improve our website. The collected data
+              is anonymized and cannot be traced back to you.
             </p>
           </div>
 
           <div>
             <h3 className="font-semibold text-sm mb-2">Marketing Cookies</h3>
             <p className="text-sm">
-              Diese Cookies werden verwendet, um Ihnen relevante Werbung anzuzeigen.
-              Sie können Sie über mehrere Websites hinweg verfolgen. Wir nutzen diese
-              nur mit Ihrer ausdrücklichen Zustimmung.
+              These cookies are used to show you relevant advertising. They can track you
+              across multiple websites. We only use these with your explicit consent.
             </p>
           </div>
         </div>
@@ -79,63 +72,57 @@ export default function CookiesPage() {
         <h2 className="text-2xl font-semibold">Session Cookies vs. Persistent Cookies</h2>
         <div className="space-y-2 text-sm">
           <p>
-            <strong>Session Cookies:</strong> Diese werden automatisch gelöscht,
-            wenn Sie Ihren Browser schließen. Sie werden verwendet, um Ihr
-            Benutzerkonto während einer Sitzung zu verwalten.
+            <strong>Session Cookies:</strong> These are automatically deleted when you close
+            your browser. They are used to manage your user account during a session.
           </p>
           <p>
-            <strong>Persistent Cookies:</strong> Diese bleiben auf Ihrem Gerät
-            gespeichert, bis Sie sie manuell löschen oder sie ablaufen. Sie werden
-            verwendet, um sich an Ihre Einstellungen zu erinnern.
+            <strong>Persistent Cookies:</strong> These remain on your device until you delete
+            them manually or they expire. They are used to remember your settings.
           </p>
         </div>
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">Wie kontrollieren Sie Cookies?</h2>
+        <h2 className="text-2xl font-semibold">How Do You Control Cookies?</h2>
         <div className="space-y-2 text-sm">
           <p>
-            Sie können die Cookies über die Einstellungen Ihres Browsers steuern.
-            Die meisten Browser ermöglichen es Ihnen:
+            You can control cookies through your browser settings. Most browsers allow you to:
           </p>
           <ul className="list-disc list-inside space-y-1">
-            <li>Cookies vollständig zu blockieren</li>
-            <li>Nur Cookies von vertrauenswürdigen Websites zu akzeptieren</li>
-            <li>Cookies automatisch zu löschen, wenn Sie den Browser schließen</li>
-            <li>Gespeicherte Cookies anzuzeigen und zu löschen</li>
+            <li>Completely block cookies</li>
+            <li>Accept cookies only from trusted websites</li>
+            <li>Automatically delete cookies when you close your browser</li>
+            <li>View and delete stored cookies</li>
           </ul>
           <p className="mt-3">
-            Bitte beachten Sie, dass das Deaktivieren von notwendigen Cookies
-            dazu führt, dass die Website nicht richtig funktioniert.
+            Please note that disabling essential cookies will prevent the website from
+            functioning properly.
           </p>
         </div>
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">Cookies von Dritten</h2>
+        <h2 className="text-2xl font-semibold">Third-Party Cookies</h2>
         <div className="space-y-2 text-sm">
           <p>
-            Unsere Website kann auf Inhalte von Dritten verweisen oder einbetten,
-            wie Videos oder Karten. Diese können ihre eigenen Cookies setzen. Wir
-            haben keine Kontrolle über die Cookies von Dritten. Bitte überprüfen
-            Sie die Datenschutzerklärungen dieser Drittanbieter für weitere
-            Informationen.
+            Our website may reference or embed content from third parties, such as videos or
+            maps. These may set their own cookies. We have no control over third-party
+            cookies. Please review the privacy policies of these third-party providers for
+            more information.
           </p>
         </div>
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">Ihre DSGVO-Rechte</h2>
+        <h2 className="text-2xl font-semibold">Your GDPR Rights</h2>
         <div className="space-y-2 text-sm">
           <p>
-            Gemäß DSGVO haben Sie das Recht, Ihre Zustimmung zu Cookies
-            jederzeit zu widerrufen. Bitte beachten Sie, dass dies die
-            Rechtmäßigkeit der vor dem Widerruf verarbeiteten Daten nicht
-            berührt.
+            Under GDPR, you have the right to revoke your consent to cookies at any time.
+            Please note that this does not affect the lawfulness of data processing before
+            revocation.
           </p>
           <p className="mt-2">
-            Wenn Sie Fragen zu unserer Cookie-Nutzung oder zur DSGVO haben,
-            kontaktieren Sie uns bitte unter:{" "}
+            If you have questions about our cookie usage or GDPR, please contact us at:{" "}
             <a href="mailto:contact@virexbooks.com" className="text-blue-500 hover:underline">
               contact@virexbooks.com
             </a>
@@ -144,19 +131,19 @@ export default function CookiesPage() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">Cookies aktualisieren</h2>
+        <h2 className="text-2xl font-semibold">Cookie Policy Updates</h2>
         <div className="space-y-2 text-sm">
           <p>
-            Diese Cookie-Richtlinie wird regelmäßig aktualisiert. Die letzte
-            Aktualisierung erfolgte am:{" "}
-            <strong>{new Date().toLocaleDateString("de-DE")}</strong>
+            This cookie policy is updated regularly. The last update was on:{" "}
+            <strong>{new Date().toLocaleDateString("en-US")}</strong>
           </p>
         </div>
       </section>
 
       <div className="pt-8 border-t text-xs text-muted-foreground">
-        <p>Zuletzt aktualisiert: {new Date().toLocaleDateString("de-DE")}</p>
+        <p>Last updated: {new Date().toLocaleDateString("en-US")}</p>
       </div>
     </div>
   )
 }
+

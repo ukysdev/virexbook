@@ -1,40 +1,40 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Impressum | VirexBooks",
-  description: "Impressum und Kontaktinformationen von VirexBooks",
+  title: "Imprint | VirexBooks",
+  description: "Imprint and contact information for VirexBooks",
   robots: "index, follow",
 }
 
 export default function ImprintPage() {
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Impressum</h1>
+      <h1 className="text-3xl font-bold">Imprint</h1>
 
       <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">Angaben gemäß § 5 TMG</h2>
+        <h2 className="text-2xl font-semibold">Provider identification</h2>
         <div className="space-y-2 text-sm">
           <p>
             <strong>VirexBooks</strong>
             <br />
-            [Ihr Name oder Unternehmensname]
+            [Your name or company name]
             <br />
-            [Straße Hausnummer]
+            [Street and number]
             <br />
-            [PLZ] [Stadt]
+            [ZIP] [City]
             <br />
-            Deutschland
+            Germany
           </p>
         </div>
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">Kontakt</h2>
+        <h2 className="text-2xl font-semibold">Contact</h2>
         <div className="space-y-2 text-sm">
           <p>
-            <strong>Telefon:</strong> [Ihre Telefonnummer]
+            <strong>Phone:</strong> [Your phone number]
             <br />
-            <strong>E-Mail:</strong>{" "}
+            <strong>Email:</strong>{" "}
             <a href="mailto:contact@virexbooks.com" className="text-blue-500 hover:underline">
               contact@virexbooks.com
             </a>
@@ -43,87 +43,81 @@ export default function ImprintPage() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">Vertreter</h2>
-        <p className="text-sm">
-          Vertreter im Sinne des § 7 Abs. 1 TMG: [Ihr Name]
-        </p>
+        <h2 className="text-2xl font-semibold">Representative</h2>
+        <p className="text-sm">Representative in the sense of applicable law: [Your name]</p>
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">Umsatzsteuer-ID</h2>
+        <h2 className="text-2xl font-semibold">VAT ID</h2>
         <p className="text-sm">
-          Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:
+          VAT identification number, if applicable:
           <br />
-          [Ihre USt-ID]
+          [Your VAT ID]
         </p>
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">Verantwortlich für redaktionelle Inhalte</h2>
-        <p className="text-sm">[Ihr Name]</p>
+        <h2 className="text-2xl font-semibold">Person responsible for editorial content</h2>
+        <p className="text-sm">[Your name]</p>
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">Haftungsausschluss</h2>
+        <h2 className="text-2xl font-semibold">Disclaimer</h2>
         <div className="space-y-2 text-sm">
-          <h3 className="font-semibold">Haftung für Inhalte</h3>
+          <h3 className="font-semibold">Liability for content</h3>
           <p>
-            Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt.
-            Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte
-            können wir jedoch keine Gewähr übernehmen. Als Diensteanbieter sind
-            wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach
-            den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind
-            wir als Diensteanbieter jedoch nicht verpflichtet, die von Nutzern
-            übermittelten oder gespeicherten Informationen zu überwachen oder
-            nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit
-            hinweisen.
+            The content on our pages has been created with the greatest care.
+            However, we cannot guarantee the accuracy, completeness or
+            timeliness of the content. As a service provider we are
+            responsible for our own content on these pages according to
+            general laws. However, we are not obliged to monitor transmitted
+            or stored third-party information or to investigate circumstances
+            that indicate unlawful activity.
           </p>
         </div>
 
         <div className="space-y-2 text-sm">
-          <h3 className="font-semibold">Haftung für Links</h3>
+          <h3 className="font-semibold">Liability for links</h3>
           <p>
-            Unser Angebot enthält Links zu externen Websites Dritter, auf deren
-            Inhalte wir keinen Einfluss haben. Deshalb können wir für diese
-            fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der
-            verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber
-            der Seiten verantwortlich.
+            Our offer contains links to external third-party websites over
+            which we have no control. Therefore, we cannot assume
+            responsibility for the content of those sites. The respective
+            provider or operator of the pages is always responsible for the
+            content of linked pages.
           </p>
         </div>
 
         <div className="space-y-2 text-sm">
-          <h3 className="font-semibold">Urheberrecht</h3>
+          <h3 className="font-semibold">Copyright</h3>
           <p>
-            Die durch die Seitenbetreiber erstellten Inhalte und Werke auf
-            diesen Seiten unterliegen dem deutschen Urheberrecht. Die
-            Vervielfältigung, Bearbeitung, Verbreitung und jede Art der
-            Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der
-            schriftlichen Zustimmung des jeweiligen Autors oder Erstellers.
+            The content and works created by the site operators on these pages
+            are subject to copyright law. Reproduction, editing, distribution
+            and any kind of exploitation outside the limits of copyright
+            require the written consent of the respective author or creator.
           </p>
         </div>
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">Datenschutz</h2>
+        <h2 className="text-2xl font-semibold">Privacy</h2>
         <p className="text-sm">
-          Die Nutzung unserer Website ist in der Regel ohne Angabe
-          personenbezogener Daten möglich. Soweit auf unseren Seiten
-          personenbezogene Daten (beispielsweise Name, Anschrift oder E-Mail
-          Adresse) erhoben werden, erfolgt dies, soweit möglich, stets auf
-          freiwilliger Basis. Diese Daten werden ohne Ihre ausdrückliche
-          Zustimmung nicht an Dritte weitergegeben.
+          Using our website is generally possible without providing personal
+          information. Where personal data (for example name, address or
+          email address) is collected on our pages, this is done – where
+          possible – on a voluntary basis. This data will not be passed on to
+          third parties without your explicit consent.
         </p>
         <p className="text-sm mt-2">
-          Weitere Informationen zu unserem Datenschutz finden Sie in unserer{" "}
+          For more information on data protection, please see our
           <a href="/legal/privacy" className="text-blue-500 hover:underline">
-            Datenschutzerklärung
+            {' '}Privacy Policy
           </a>
           .
         </p>
       </section>
 
       <div className="pt-8 border-t text-xs text-muted-foreground">
-        <p>Zuletzt aktualisiert: {new Date().toLocaleDateString("de-DE")}</p>
+        <p>Last updated: {new Date().toLocaleDateString("en-US")}</p>
       </div>
     </div>
   )

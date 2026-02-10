@@ -1,105 +1,102 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "AGB | VirexBooks",
-  description: "Allgemeine Geschäftsbedingungen von VirexBooks",
+  title: "Terms of Service | VirexBooks",
+  description: "Terms of Service of VirexBooks",
   robots: "index, follow",
 }
 
 export default function TermsPage() {
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Allgemeine Geschäftsbedingungen (AGB)</h1>
+      <h1 className="text-3xl font-bold">Terms of Service</h1>
 
       <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">1. Geltungsbereich</h2>
+        <h2 className="text-2xl font-semibold">1. Scope</h2>
         <div className="space-y-2 text-sm">
           <p>
-            Diese AGB gelten für alle Leistungen, die wir Ihnen auf der Website
-            VirexBooks anbieten. Durch die Nutzung unserer Website erklären Sie
-            sich mit diesen Bedingungen einverstanden.
+            These Terms of Service apply to all services we provide to you on the
+            VirexBooks website. By using our website, you agree to these terms and
+            conditions.
           </p>
         </div>
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">2. Registrierung und Benutzerkonto</h2>
+        <h2 className="text-2xl font-semibold">2. Registration and User Account</h2>
         <div className="space-y-2 text-sm">
           <p>
-            Für die Nutzung bestimmter Funktionen ist eine Registrierung erforderlich.
-            Sie erklären sich verpflichtet, wahrheitsgemäße Angaben zu machen. Sie
-            sind allein verantwortlich für die Geheimhaltung Ihres Passworts. Sie
-            haften für alle Aktivitäten, die unter Ihrem Konto stattfinden.
+            Registration is required to use certain features. You agree to provide
+            accurate and truthful information. You are solely responsible for keeping
+            your password confidential. You are liable for all activities that occur
+            under your account.
           </p>
         </div>
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">3. Nutzungsrechte und Beschränkungen</h2>
+        <h2 className="text-2xl font-semibold">3. License and Restrictions</h2>
         <div className="space-y-2 text-sm">
           <p>
-            Wir gewähren Ihnen eine begrenzte, nicht ausschließliche,
-            nicht übertragbare Lizenz zur Nutzung von VirexBooks für
-            Ihre persönlichen, nicht-kommerziellen Zwecke. Dies umfasst:
+            We grant you a limited, non-exclusive, non-transferable license to use
+            VirexBooks for your personal, non-commercial purposes. This includes:
           </p>
           <ul className="list-disc list-inside space-y-1 mb-3">
-            <li>Das Lesen und Genießen von Inhalten anderer Autoren</li>
-            <li>Das Veröffentlichen Ihrer eigenen Werke</li>
-            <li>Die Teilnahme an der Community</li>
+            <li>Reading and enjoying content from other authors</li>
+            <li>Publishing your own works</li>
+            <li>Participating in the community</li>
           </ul>
           <p>
-            Sie dürfen darüber hinaus nicht:
+            You must not:
           </p>
           <ul className="list-disc list-inside space-y-1">
-            <li>Inhalte anderer Benutzer vervielfältigen, ändern oder ohne Genehmigung verbreiten</li>
-            <li>Automatisierte Systeme zur Datenerfassung nutzen</li>
-            <li>Andere Benutzer belästigen oder bedrohen</li>
-            <li>Community-Richtlinien verletzen</li>
-            <li>Die Platform hacken oder manipulieren</li>
-            <li>Ihren Account verkaufen oder an andere Personen abtreten</li>
+            <li>Reproduce, modify, or distribute other users' content without permission</li>
+            <li>Use automated systems to collect data</li>
+            <li>Harass or threaten other users</li>
+            <li>Violate community guidelines</li>
+            <li>Hack or manipulate the platform</li>
+            <li>Sell your account or transfer it to others</li>
           </ul>
         </div>
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">4. Benutzer-Inhalte und Urheberrechte</h2>
+        <h2 className="text-2xl font-semibold">4. User Content and Copyright</h2>
         <div className="space-y-2 text-sm">
-          <p className="font-semibold">Ihre Rechte an Ihren Inhalten:</p>
+          <p className="font-semibold">Your rights to your content:</p>
           <p>
-            Sie behalten die vollständigen Urheberrechte an allen Inhalten, die Sie 
-            auf VirexBooks erstellen und veröffentlichen (Texte, Geschichten, Kapitel, etc.). 
-            VirexBooks beansprucht keine Eigentumsrechte an Ihren Werken.
+            You retain full copyright to all content you create and publish on VirexBooks
+            (texts, stories, chapters, etc.). VirexBooks claims no ownership rights to
+            your works.
           </p>
 
-          <p className="font-semibold mt-3">Lizenz an VirexBooks:</p>
+          <p className="font-semibold mt-3">License to VirexBooks:</p>
           <p>
-            Mit dem Hochladen und Veröffentlichen von Inhalten gewähren Sie VirexBooks 
-            eine weltweite, kostenlose, nicht ausschließliche Lizenz, um:
-          </p>
-          <ul className="list-disc list-inside space-y-1">
-            <li>Ihre Inhalte auf der Platform zu speichern und zu hosten</li>
-            <li>Ihre Inhalte den anderen Benutzern anzuzeigen</li>
-            <li>Ihre Inhalte für technische Zwecke zu verarbeiten (z.B. Backups, Indizierung, Optimierung)</li>
-            <li>Ihre Inhalte zu promoten (z.B. in Kategorien, Sammlungen, in sozialen Medien)</li>
-          </ul>
-
-          <p className="font-semibold mt-3">Verantwortung:</p>
-          <p>
-            Sie sind allein verantwortlich für die Inhalte, die Sie veröffentlichen. 
-            Sie versichern, dass:
+            By uploading and publishing content, you grant VirexBooks a worldwide,
+            royalty-free, non-exclusive license to:
           </p>
           <ul className="list-disc list-inside space-y-1">
-            <li>Sie die Urheberrechte an Ihren Inhalten haben oder über die erforderliche Lizenz verfügen</li>
-            <li>Ihre Inhalte keine Rechte Dritter verletzen</li>
-            <li>Ihre Inhalte keine illegalen Materialien enthalten</li>
-            <li>Ihre Inhalte nicht beleidigend, rassistisch oder diskriminierend sind</li>
+            <li>Store and host your content on the platform</li>
+            <li>Display your content to other users</li>
+            <li>Process your content for technical purposes (e.g., backups, indexing, optimization)</li>
+            <li>Promote your content (e.g., in categories, collections, on social media)</li>
           </ul>
 
-          <p className="font-semibold mt-3">Löschung Ihrer Inhalte:</p>
+          <p className="font-semibold mt-3">Responsibility:</p>
           <p>
-            Sie können Ihre Inhalte jederzeit löschen. Nach der Löschung werden sie 
-            nicht mehr auf der öffentlichen Platform angezeigt, aber Backups können noch 
-            kurzzeitig vorhanden sein.
+            You are solely responsible for the content you publish. You warrant that:
+          </p>
+          <ul className="list-disc list-inside space-y-1">
+            <li>You own the copyright to your content or have the necessary license</li>
+            <li>Your content does not infringe third-party rights</li>
+            <li>Your content does not contain illegal material</li>
+            <li>Your content is not offensive, racist, or discriminatory</li>
+          </ul>
+
+          <p className="font-semibold mt-3">Deleting your content:</p>
+          <p>
+            You can delete your content at any time. After deletion, it will no longer
+            be displayed on the public platform, but backups may still exist temporarily.
           </p>
         </div>
       </section>
@@ -107,123 +104,122 @@ export default function TermsPage() {
       <section className="space-y-3">
         <h2 className="text-2xl font-semibold">5. Haftungsausschluss und Inhalte von Benutzern</h2>
         <div className="space-y-2 text-sm">
+          <p>Disclaimer and User-Generated Content</h2>
+        <div className="space-y-2 text-sm">
           <p>
-            VirexBooks ist eine Community-Platform, auf der Benutzer Inhalte erstellen 
-            und teilen. Wir sind nicht verantwortlich für die Richtigkeit, Vollständigkeit 
-            oder Qualität der von Benutzern erstellten Inhalte.
+            VirexBooks is a community platform where users create and share content.
+            We are not responsible for the accuracy, completeness, or quality of
+            user-generated content.
           </p>
           <p>
-            VirexBooks wird auf einer „wie besehen" Basis bereitgestellt. Wir
-            lehnen alle ausdrücklichen und stillschweigenden Garantien ab,
-            einschließlich der Garantien der Marktgängigkeit und Eignung für
-            einen bestimmten Zweck. Wir haften nicht für:
+            VirexBooks is provided on an "as is" basis. We disclaim all express and
+            implied warranties, including warranties of merchantability and fitness
+            for a particular purpose. We are not liable for:
           </p>
           <ul className="list-disc list-inside space-y-1">
-            <li>Datenverlust oder Beschädigungen</li>
-            <li>Unterbrechung oder Ausfälle des Service</li>
-            <li>Von Benutzern erstellte Inhalte (Geschichten, Kommentare, etc.)</li>
-            <li>Indirekte oder Folgeschäden</li>
-            <li>Jegliche Verletzungen von Rechten Dritter durch Benutzer-Inhalte</li>
-          </ul>
-        </div>
+            <li>Data loss or corruption</li>
+            <li>Service interruptions or outages</li>
+            <li>User-generated content (stories, comments, etc.)</li>
+            <li>Indirect or consequential damages</li>
+            <li>Any violation of third-party rights by user content
       </section>
 
       <section className="space-y-3">
         <h2 className="text-2xl font-semibold">6. Haftungsbeschränkung</h2>
+        <div className="space-y-2 text-sm">Limitation of Liability</h2>
         <div className="space-y-2 text-sm">
           <p>
-            In keinem Fall haften wir für Schäden, die sich aus der Nutzung oder
-            Unmöglichkeit der Nutzung von VirexBooks ergeben, auch wenn wir auf
-            die Möglichkeit solcher Schäden hingewiesen wurden.
-          </p>
+            In no event shall we be liable for any damages arising out of or in
+            connection with your use of or inability to use VirexBooks, even if we
+            have been advised of the possibility of such damages
         </div>
       </section>
 
       <section className="space-y-3">
         <h2 className="text-2xl font-semibold">7. Moderation und Inhaltsrichtlinien</h2>
+        <div className="space-y-2 text-sm">Content Moderation and Guidelines</h2>
         <div className="space-y-2 text-sm">
           <p>
-            VirexBooks behält sich das Recht vor, Inhalte zu moderieren und zu entfernen, 
-            die gegen unsere Community-Richtlinien verstoßen, einschließlich:
+            VirexBooks reserves the right to moderate and remove content that violates
+            our community guidelines, including:
           </p>
           <ul className="list-disc list-inside space-y-1">
-            <li>Illegale oder verschleierte Inhalte</li>
-            <li>Rassistische, sexistische oder diskriminierende Inhalte</li>
-            <li>Mobbing oder Belästigung von anderen Benutzern</li>
-            <li>Spam oder automatisiert generierte Inhalte</li>
-            <li>Inhalte, die Rechte Dritter verletzen</li>
-            <li>Sexuelle Inhalte mit Mindern (absolutes Verbot)</li>
+            <li>Illegal or obscured content</li>
+            <li>Racist, sexist, or discriminatory content</li>
+            <li>Harassment or bullying of other users</li>
+            <li>Spam or automatically generated content</li>
+            <li>Content that violates third-party rights</li>
+            <li>Sexual content involving minors (absolute prohibition)</li>
           </ul>
           <p className="mt-3">
-            Wir werden Ihnen nach Möglichkeit vorher benachrichtigen, wenn wir Ihre 
-            Inhalte entfernen. In schwerwiegenden Fällen können wir Ihren Account 
-            sofort deaktivieren.
-          </p>
+            We will notify you in advance when possible if we remove your content. In
+            serious cases, we may suspend your account immediately
         </div>
       </section>
 
       <section className="space-y-3">
         <h2 className="text-2xl font-semibold">8. Änderung und Beendigung</h2>
+        <div className="space-y-2 text-sm">Modifications and Termination</h2>
         <div className="space-y-2 text-sm">
           <p>
-            Wir behalten uns das Recht vor, VirexBooks und diese AGB jederzeit
-            zu ändern. Wesentliche Änderungen werden Ihnen mitgeteilt.
+            We reserve the right to modify VirexBooks and these Terms of Service at
+            any time. Material changes will be communicated to you.
           </p>
           <p>
-            Wir können Ihren Zugriff auf VirexBooks jederzeit beenden, wenn Sie 
-            gegen diese AGB verstoßen. Sie können Ihren Account jederzeit selbst löschen.
+            We may terminate your access to VirexBooks at any time if you violate
+            these Terms of Service. You may delete your account at any time.
           </p>
           <p className="mt-2 font-semibold">
-            Wichtig: Wenn Ihr Account gelöscht wird, werden Ihre veröffentlichten Inhalte 
-            nicht automatisch gelöscht. Sie müssen diese manuell löschen, wenn Sie möchten, 
-            dass sie nicht mehr verfügbar sind. Sie können auch Ihre Inhalte exportieren, 
-            bevor Sie Ihren Account löschen.
-          </p>
+            Important: When your account is deleted, your published content will not be
+            automatically deleted. You must manually delete it if you want it to no longer
+            be available. You can also export your content before deleting your account
         </div>
       </section>
 
       <section className="space-y-3">
         <h2 className="text-2xl font-semibold">9. Datenschutz und Privatsphäre</h2>
         <div className="space-y-2 text-sm">
+          <p>Privacy and Data Protection</h2>
+        <div className="space-y-2 text-sm">
           <p>
-            Ihre Nutzung von VirexBooks unterliegt unserer Datenschutzerklärung. 
-            Bitte lesen Sie unsere{" "}
+            Your use of VirexBooks is governed by our Privacy Policy. Please read our{" "}
             <a href="/legal/privacy" className="text-blue-500 hover:underline">
-              Datenschutzerklärung
+              Privacy Policy
             </a>
-            , um zu verstehen, wie wir Ihre persönlichen Daten verarbeiten.
-          </p>
-        </div>
+            {" "}to understand how we process your personal data
       </section>
 
       <section className="space-y-3">
         <h2 className="text-2xl font-semibold">10. Salvatorische Klausel</h2>
         <div className="space-y-2 text-sm">
           <p>
-            Sollte eine Bestimmung dieser AGB unwirksam sein, bleibt die Gültigkeit 
-            der übrigen Bestimmungen unberührt. Wir werden die unwirksame Bestimmung 
-            durch eine wirksame Bestimmung ersetzen, die dem Sinn und Zweck der 
-            ursprünglichen Bestimmung entspricht.
-          </p>
-        </div>
-      </section>
+            Sollte eine Bestimmung dieser AGB unwirkeverability</h2>
+        <div className="space-y-2 text-sm">
+          <p>
+            If any provision of these Terms of Service is found to be invalid, the
+            validity of the remaining provisions shall not be affected. We will replace
+            any invalid provision with a valid one that achieves the intent and purpose
+            of the original provision
 
       <section className="space-y-3">
         <h2 className="text-2xl font-semibold">11. Anwendbares Recht</h2>
         <div className="space-y-2 text-sm">
           <p>
-            Diese AGB werden nach deutschem Recht ausgelegt und die deutschen
-            Gerichte haben die ausschließliche Gerichtsbarkeit über alle Streitigkeiten
-            in Bezug auf diese AGB.
-          </p>
-        </div>
-      </section>
+            Diese AGB werden nach deutschem Recht aGoverning Law</h2>
+        <div className="space-y-2 text-sm">
+          <p>
+            These Terms of Service shall be governed by and construed in accordance
+            with the laws of Germany, and the German courts shall have exclusive
+            jurisdiction over any disputes arising out of or relating to these
+            Terms of Service
 
       <section className="space-y-3">
         <h2 className="text-2xl font-semibold">12. Kontakt</h2>
         <div className="space-y-2 text-sm">
+          <p>Contact</h2>
+        <div className="space-y-2 text-sm">
           <p>
-            Falls Sie Fragen zu diesen AGB haben, kontaktieren Sie uns bitte unter:
+            If you have any questions about these Terms of Service, please contact us at:
             <br />
             <a href="mailto:contact@virexbooks.com" className="text-blue-500 hover:underline">
               contact@virexbooks.com
@@ -233,8 +229,6 @@ export default function TermsPage() {
       </section>
 
       <div className="pt-8 border-t text-xs text-muted-foreground">
-        <p>Zuletzt aktualisiert: {new Date().toLocaleDateString("de-DE")}</p>
-      </div>
-    </div>
+        <p>Last updated: {new Date().toLocaleDateString("en-US
   )
 }
