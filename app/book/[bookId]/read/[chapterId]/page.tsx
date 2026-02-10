@@ -5,6 +5,7 @@ import { Navbar } from "@/components/navbar"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { ShareButton } from "@/components/share-button"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { useEffect, useState, useCallback } from "react"
@@ -161,13 +162,23 @@ export default function ReaderPage() {
             {book.title}
           </Link>
 
-          <h1 className="font-display text-2xl font-bold text-foreground md:text-3xl">
-            {chapter.title}
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Chapter {currentIndex + 1} of {chapters.length} -{" "}
-            {chapter.word_count} words
-          </p>
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+            <div className="flex-1">
+              <h1 className="font-display text-2xl font-bold text-foreground md:text-3xl">
+                {chapter.title}
+              </h1>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Chapter {currentIndex + 1} of {chapters.length} -{" "}
+                {chapter.word_count} words
+              </p>
+            </div>
+            <ShareButton
+              title={`${chapter.title} - ${book.title}`}
+              description={`Kapitel ${currentIndex + 1} von "${book.title}"`}
+              url={typeof window !== "undefined" ? window.location.href : ""}
+              variant="outline"
+            />
+          </div>
         </div>
 
         {/* Content */}

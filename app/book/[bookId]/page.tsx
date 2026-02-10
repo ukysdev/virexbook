@@ -5,6 +5,7 @@ import { Navbar } from "@/components/navbar"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { VirexBadge } from "@/components/virex-badge"
+import { ShareButton } from "@/components/share-button"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { useEffect, useState, useCallback } from "react"
@@ -284,7 +285,7 @@ export default function BookDetailPage() {
             )}
 
             {/* Actions */}
-            <div className="mt-6 flex items-center gap-3">
+            <div className="mt-6 flex items-center gap-3 flex-wrap">
               {chapters.length > 0 && (
                 <Link href={`/book/${bookId}/read/${chapters[0].id}`}>
                   <Button className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
@@ -307,6 +308,11 @@ export default function BookDetailPage() {
                 />
                 {liked ? "Liked" : "Like"}
               </Button>
+              <ShareButton
+                title={book.title}
+                description={book.description || undefined}
+                url={typeof window !== "undefined" ? window.location.href : ""}
+              />
             </div>
           </div>
         </div>

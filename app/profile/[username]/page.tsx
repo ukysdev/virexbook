@@ -6,6 +6,7 @@ import { BookCard } from "@/components/book-card"
 import { VirexBadge } from "@/components/virex-badge"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { ShareButton } from "@/components/share-button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
@@ -253,7 +254,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Actions */}
-            <div className="mt-4 flex items-center justify-center gap-2 md:justify-start">
+            <div className="mt-4 flex items-center justify-center gap-2 md:justify-start flex-wrap">
               {isOwner ? (
                 <Button
                   variant="outline"
@@ -297,6 +298,12 @@ export default function ProfilePage() {
                   )}
                 </Button>
               )}
+              <ShareButton
+                title={profile.display_name || profile.username}
+                description={profile.bio || `Besuche ${profile.display_name || profile.username}s Profil auf VirexBooks`}
+                url={typeof window !== "undefined" ? window.location.href : ""}
+                variant="outline"
+              />
             </div>
           </div>
         </div>

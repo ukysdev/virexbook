@@ -2,6 +2,7 @@ import React from "react"
 import type { Metadata, Viewport } from "next"
 import { Inter, Space_Grotesk } from "next/font/google"
 import { Toaster } from "sonner"
+import { Footer } from "@/components/footer"
 
 import "./globals.css"
 
@@ -28,8 +29,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="de">
-      <body className="font-sans antialiased bg-background text-foreground min-h-screen">
-        {children}
+      <body className="font-sans antialiased bg-background text-foreground min-h-screen flex flex-col">
+        <div className="flex-1">{children}</div>
+        <Footer />
         <Toaster richColors position="bottom-right" />
       </body>
     </html>
