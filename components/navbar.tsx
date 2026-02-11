@@ -19,6 +19,7 @@ import {
   LogOut,
   User,
   LayoutDashboard,
+  Settings,
   Menu,
   X,
 } from "lucide-react"
@@ -156,6 +157,15 @@ export function Navbar() {
                     >
                       <LayoutDashboard className="h-4 w-4" />
                       Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/settings"
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
+                      <Settings className="h-4 w-4" />
+                      Settings
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-border" />
