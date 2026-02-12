@@ -18,6 +18,9 @@ import {
   MessageCircle,
   Send,
   ChevronUp,
+  Quote,
+  Type,
+  Palette,
 } from "lucide-react"
 import { toast } from "sonner"
 
@@ -34,6 +37,36 @@ export default function ReaderPage() {
   const [loading, setLoading] = useState(true)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [showComments, setShowComments] = useState(false)
+  const [fontSize, setFontSize] = useState(18)
+  const [lineHeight, setLineHeight] = useState(1.75)
+  const [readerTheme, setReaderTheme] = useState<"default" | "sepia" | "night">("default")
+  const [selectedQuote, setSelectedQuote] = useState("")
+
+  const getScrollProgress = useCallback(() => {
+    const scrollTop = window.scrollY || 0
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight
+    if (maxScroll <= 0) return 0
+    return Math.max(0, Math.min(1, scrollTop / maxScroll))
+  }, [])
+
+  const saveProgress = useCallback(
+    async (forcedScroll?: number) => {
+      if (!currentUserId) return
+      const supabase = createClient()
+      const scrollValue = forcedScroll ?? getScrollProgress()
+      await supabase.from("reading_progress").upsert(
+        {
+          user_id: currentUserId,
+          book_id: bookId,
+          chapter_id: chapterId,
+          scroll_position: scrollValue,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "user_id,book_id" }
+      )
+    },
+    [bookId, chapterId, currentUserId, getScrollProgress]
+  )
 
   const fetchData = useCallback(async () => {
     const supabase = createClient()
@@ -43,7 +76,7 @@ export default function ReaderPage() {
     } = await supabase.auth.getUser()
     if (user) setCurrentUserId(user.id)
 
-    const [bookRes, chapterRes, allChaptersRes, commentsRes] =
+    const [bookRes, chapterRes, allChaptersRes, commentsRes, progressRes] =
       await Promise.all([
         supabase.from("books").select("*").eq("id", bookId).single(),
         supabase.from("chapters").select("*").eq("id", chapterId).single(),
@@ -58,6 +91,14 @@ export default function ReaderPage() {
           .select("*, profiles(*)")
           .eq("chapter_id", chapterId)
           .order("created_at", { ascending: true }),
+        user
+          ? supabase
+              .from("reading_progress")
+              .select("chapter_id, scroll_position")
+              .eq("user_id", user.id)
+              .eq("book_id", bookId)
+              .maybeSingle()
+          : Promise.resolve({ data: null }),
       ])
 
     if (bookRes.data) setBook(bookRes.data as Book)
@@ -73,12 +114,74 @@ export default function ReaderPage() {
         .eq("id", chapterId)
     }
 
+    if (
+      progressRes?.data?.chapter_id === chapterId &&
+      typeof progressRes.data.scroll_position === "number"
+    ) {
+      const target = progressRes.data.scroll_position
+      setTimeout(() => {
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight
+        if (maxScroll > 0) {
+          window.scrollTo({
+            top: maxScroll * Math.max(0, Math.min(1, target)),
+            behavior: "smooth",
+          })
+        }
+      }, 120)
+    }
+
     setLoading(false)
   }, [bookId, chapterId])
 
   useEffect(() => {
     fetchData()
   }, [fetchData])
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    const savedFont = window.localStorage.getItem("reader_font_size")
+    const savedLine = window.localStorage.getItem("reader_line_height")
+    const savedTheme = window.localStorage.getItem("reader_theme")
+    if (savedFont) setFontSize(Number(savedFont))
+    if (savedLine) setLineHeight(Number(savedLine))
+    if (savedTheme === "default" || savedTheme === "sepia" || savedTheme === "night") {
+      setReaderTheme(savedTheme)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    window.localStorage.setItem("reader_font_size", String(fontSize))
+    window.localStorage.setItem("reader_line_height", String(lineHeight))
+    window.localStorage.setItem("reader_theme", readerTheme)
+  }, [fontSize, lineHeight, readerTheme])
+
+  useEffect(() => {
+    if (!currentUserId) return
+    const onScroll = () => {
+      if (scrollTimer) window.clearTimeout(scrollTimer)
+      scrollTimer = window.setTimeout(() => {
+        void saveProgress()
+      }, 300)
+    }
+
+    let scrollTimer: number | undefined
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => {
+      if (scrollTimer) window.clearTimeout(scrollTimer)
+      void saveProgress()
+      window.removeEventListener("scroll", onScroll)
+    }
+  }, [currentUserId, saveProgress])
+
+  useEffect(() => {
+    const onSelectionChange = () => {
+      const selected = window.getSelection()?.toString().trim() || ""
+      setSelectedQuote(selected.slice(0, 300))
+    }
+    document.addEventListener("selectionchange", onSelectionChange)
+    return () => document.removeEventListener("selectionchange", onSelectionChange)
+  }, [])
 
   const currentIndex = chapters.findIndex((c) => c.id === chapterId)
   const prevChapter = currentIndex > 0 ? chapters[currentIndex - 1] : null
@@ -113,6 +216,22 @@ export default function ReaderPage() {
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
+  const shareQuote = async () => {
+    if (!selectedQuote || !book || !chapter) return
+    const baseUrl = typeof window !== "undefined" ? window.location.href : ""
+    const text = `"${selectedQuote}" — ${chapter.title}, ${book.title}`
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: book.title, text, url: baseUrl })
+        return
+      } catch {
+        // Fallback to clipboard
+      }
+    }
+    await navigator.clipboard.writeText(`${text}\n${baseUrl}`)
+    toast.success("Quote copied to clipboard")
   }
 
   if (loading) {
@@ -185,9 +304,74 @@ export default function ReaderPage() {
           </div>
         </div>
 
+        <div className="mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-border bg-card p-3">
+          <span className="flex items-center gap-1 text-xs text-muted-foreground">
+            <Type className="h-3.5 w-3.5" />
+            Reader style
+          </span>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setFontSize((prev) => Math.max(15, prev - 1))}
+            className="h-8 bg-transparent"
+          >
+            A-
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setFontSize((prev) => Math.min(24, prev + 1))}
+            className="h-8 bg-transparent"
+          >
+            A+
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setLineHeight((prev) => (prev < 1.8 ? 2 : 1.6))}
+            className="h-8 bg-transparent"
+          >
+            Line spacing
+          </Button>
+          <span className="mx-1 h-5 w-px bg-border" />
+          <span className="flex items-center gap-1 text-xs text-muted-foreground">
+            <Palette className="h-3.5 w-3.5" />
+            Theme
+          </span>
+          {(["default", "sepia", "night"] as const).map((theme) => (
+            <Button
+              key={theme}
+              size="sm"
+              variant={readerTheme === theme ? "default" : "outline"}
+              onClick={() => setReaderTheme(theme)}
+              className="h-8 capitalize"
+            >
+              {theme}
+            </Button>
+          ))}
+          {selectedQuote && (
+            <Button size="sm" onClick={shareQuote} className="ml-auto gap-1.5 h-8">
+              <Quote className="h-3.5 w-3.5" />
+              Share quote
+            </Button>
+          )}
+        </div>
+
         {/* Content */}
-        <article className="prose-invert max-w-none">
-          <div className="whitespace-pre-wrap text-foreground leading-relaxed text-base">
+        <article className="max-w-none">
+          <div
+            className={`whitespace-pre-wrap rounded-xl border border-border p-5 ${
+              readerTheme === "sepia"
+                ? "bg-amber-50 text-amber-900 border-amber-100"
+                : readerTheme === "night"
+                  ? "bg-slate-950 text-slate-100 border-slate-800"
+                  : "bg-card text-foreground"
+            }`}
+            style={{
+              fontSize: `${fontSize}px`,
+              lineHeight: lineHeight,
+            }}
+          >
             {chapter.content || (
               <p className="italic text-muted-foreground">
                 This chapter has no content yet.

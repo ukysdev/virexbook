@@ -10,7 +10,7 @@ import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState, useCallback, useRef } from "react"
 import type { Chapter } from "@/lib/types"
-import { ArrowLeft, Save, Globe, Upload } from "lucide-react"
+import { ArrowLeft, Save, Globe, Upload, CalendarClock } from "lucide-react"
 import { toast } from "sonner"
 
 export default function ChapterEditorPage() {
@@ -24,6 +24,7 @@ export default function ChapterEditorPage() {
   const [saving, setSaving] = useState(false)
   const [loading, setLoading] = useState(true)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
+  const [publishAt, setPublishAt] = useState("")
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const autoSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -40,6 +41,9 @@ export default function ChapterEditorPage() {
       setChapter(ch)
       setTitle(ch.title)
       setContent(ch.content)
+      setPublishAt(
+        ch.publish_at ? new Date(ch.publish_at).toISOString().slice(0, 16) : ""
+      )
     }
     setLoading(false)
   }, [chapterId])
@@ -59,6 +63,7 @@ export default function ChapterEditorPage() {
         .update({
           title: title.trim(),
           content,
+          publish_at: publishAt ? new Date(publishAt).toISOString() : null,
           word_count: wordCount,
           updated_at: new Date().toISOString(),
         })
@@ -72,7 +77,7 @@ export default function ChapterEditorPage() {
         if (showToast) toast.success("Saved!")
       }
     },
-    [content, title, chapterId]
+    [content, title, chapterId, publishAt]
   )
 
   // Auto-save every 30 seconds
@@ -127,7 +132,11 @@ export default function ChapterEditorPage() {
       chapter?.status === "published" ? "draft" : "published"
     const { error } = await supabase
       .from("chapters")
-      .update({ status: newStatus, updated_at: new Date().toISOString() })
+      .update({
+        status: newStatus,
+        publish_at: newStatus === "published" ? null : publishAt ? new Date(publishAt).toISOString() : null,
+        updated_at: new Date().toISOString(),
+      })
       .eq("id", chapterId)
 
     if (error) {
@@ -241,6 +250,36 @@ export default function ChapterEditorPage() {
               {saving ? "Saving..." : "Save"}
             </Button>
           </div>
+        </div>
+
+        <div className="mb-4 rounded-xl border border-border bg-card p-3">
+          <label
+            htmlFor="publishAt"
+            className="mb-2 flex items-center gap-2 text-xs font-medium text-foreground"
+          >
+            <CalendarClock className="h-3.5 w-3.5" />
+            Scheduled publish (optional)
+          </label>
+          <div className="flex flex-wrap items-center gap-2">
+            <Input
+              id="publishAt"
+              type="datetime-local"
+              value={publishAt}
+              onChange={(e) => setPublishAt(e.target.value)}
+              className="max-w-xs bg-secondary border-border text-foreground"
+            />
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setPublishAt("")}
+              className="bg-transparent"
+            >
+              Clear
+            </Button>
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">
+            Save the chapter after setting date/time. Use `/api/cron/publish-scheduled` with a free cron service to auto-publish.
+          </p>
         </div>
 
         {/* Title */}

@@ -22,6 +22,8 @@ import {
   Settings,
   Menu,
   X,
+  Rss,
+  Library,
 } from "lucide-react"
 import { useEffect, useState } from "react"
 import type { Profile } from "@/lib/types"
@@ -101,11 +103,33 @@ export function Navbar() {
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
-          {isLoggedIn ? (
-            <>
-              <Link href="/write">
-                <Button
-                  size="sm"
+            {isLoggedIn ? (
+              <>
+                <Link
+                  href="/feed"
+                  className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                    pathname === "/feed"
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  }`}
+                >
+                  <Rss className="h-4 w-4" />
+                  Feed
+                </Link>
+                <Link
+                  href="/library"
+                  className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                    pathname === "/library"
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  }`}
+                >
+                  <Library className="h-4 w-4" />
+                  Library
+                </Link>
+                <Link href="/write">
+                  <Button
+                    size="sm"
                   className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
                 >
                   <PenTool className="h-4 w-4" />
@@ -240,6 +264,22 @@ export function Navbar() {
                 >
                   <PenTool className="h-4 w-4" />
                   Write
+                </Link>
+                <Link
+                  href="/feed"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground"
+                >
+                  <Rss className="h-4 w-4" />
+                  Feed
+                </Link>
+                <Link
+                  href="/library"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-foreground"
+                >
+                  <Library className="h-4 w-4" />
+                  Library
                 </Link>
                 <Link
                   href="/dashboard"

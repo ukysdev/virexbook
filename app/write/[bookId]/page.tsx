@@ -41,6 +41,19 @@ export default function ChapterManagerPage() {
     } = await supabase.auth.getUser()
     if (!user) return
 
+    await supabase
+      .from("chapters")
+      .update({
+        status: "published",
+        publish_at: null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("book_id", bookId)
+      .eq("user_id", user.id)
+      .eq("status", "draft")
+      .lte("publish_at", new Date().toISOString())
+      .not("publish_at", "is", null)
+
     const [bookRes, chaptersRes] = await Promise.all([
       supabase.from("books").select("*").eq("id", bookId).single(),
       supabase
@@ -352,6 +365,11 @@ export default function ChapterManagerPage() {
                   <p className="text-xs text-muted-foreground">
                     {chapter.word_count} words
                   </p>
+                  {chapter.publish_at && chapter.status === "draft" && (
+                    <p className="text-[11px] text-amber-500">
+                      Scheduled: {new Date(chapter.publish_at).toLocaleString("de-DE")}
+                    </p>
+                  )}
                 </div>
 
                 <Badge

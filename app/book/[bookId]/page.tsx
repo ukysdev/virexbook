@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/client"
 import { Navbar } from "@/components/navbar"
+import { BookCard } from "@/components/book-card"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { VirexBadge } from "@/components/virex-badge"
@@ -21,6 +22,8 @@ import {
   Globe,
   Clock,
   ChevronRight,
+  Bookmark,
+  BookmarkCheck,
 } from "lucide-react"
 import { toast } from "sonner"
 
@@ -31,6 +34,9 @@ export default function BookDetailPage() {
   const [chapters, setChapters] = useState<Chapter[]>([])
   const [author, setAuthor] = useState<Profile | null>(null)
   const [liked, setLiked] = useState(false)
+  const [savedToLibrary, setSavedToLibrary] = useState(false)
+  const [resumeChapterId, setResumeChapterId] = useState<string | null>(null)
+  const [similarBooks, setSimilarBooks] = useState<Book[]>([])
   const [likeCount, setLikeCount] = useState(0)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
@@ -60,6 +66,16 @@ export default function BookDetailPage() {
         .from("books")
         .update({ view_count: b.view_count + 1 })
         .eq("id", bookId)
+
+      const { data: similarData } = await supabase
+        .from("books")
+        .select("*, profiles(*)")
+        .eq("status", "published")
+        .eq("genre", b.genre)
+        .neq("id", bookId)
+        .order("view_count", { ascending: false })
+        .limit(6)
+      setSimilarBooks((similarData || []) as Book[])
     }
 
     const { data: chapterData } = await supabase
@@ -73,14 +89,31 @@ export default function BookDetailPage() {
 
     // Check if liked
     if (user) {
-      const { data: likeData } = await supabase
-        .from("likes")
-        .select("id")
-        .eq("user_id", user.id)
-        .eq("book_id", bookId)
-        .single()
+      const [likeRes, listRes, progressRes] = await Promise.all([
+        supabase
+          .from("likes")
+          .select("id")
+          .eq("user_id", user.id)
+          .eq("book_id", bookId)
+          .maybeSingle(),
+        supabase
+          .from("reading_lists")
+          .select("id")
+          .eq("user_id", user.id)
+          .eq("book_id", bookId)
+          .maybeSingle(),
+        supabase
+          .from("reading_progress")
+          .select("chapter_id")
+          .eq("user_id", user.id)
+          .eq("book_id", bookId)
+          .not("chapter_id", "is", null)
+          .maybeSingle(),
+      ])
 
-      if (likeData) setLiked(true)
+      if (likeRes.data) setLiked(true)
+      if (listRes.data) setSavedToLibrary(true)
+      if (progressRes.data?.chapter_id) setResumeChapterId(progressRes.data.chapter_id)
     }
 
     setLoading(false)
@@ -125,6 +158,37 @@ export default function BookDetailPage() {
         .update({ like_count: likeCount + 1 })
         .eq("id", bookId)
     }
+  }
+
+  const toggleLibrary = async () => {
+    if (!currentUserId) {
+      toast.error("Log in to save books")
+      return
+    }
+
+    const supabase = createClient()
+    if (savedToLibrary) {
+      await supabase
+        .from("reading_lists")
+        .delete()
+        .eq("user_id", currentUserId)
+        .eq("book_id", bookId)
+      setSavedToLibrary(false)
+      toast.success("Removed from library")
+      return
+    }
+
+    const { error } = await supabase
+      .from("reading_lists")
+      .insert({ user_id: currentUserId, book_id: bookId })
+
+    if (error) {
+      toast.error("Could not save to library")
+      return
+    }
+
+    setSavedToLibrary(true)
+    toast.success("Saved to library")
   }
 
   if (loading) {
@@ -286,6 +350,16 @@ export default function BookDetailPage() {
 
             {/* Actions */}
             <div className="mt-6 flex items-center gap-3 flex-wrap">
+              {resumeChapterId && (
+                <Link href={`/book/${bookId}/read/${resumeChapterId}`}>
+                  <Button
+                    variant="outline"
+                    className="gap-2 border-border text-foreground hover:bg-secondary bg-transparent"
+                  >
+                    Continue Reading
+                  </Button>
+                </Link>
+              )}
               {chapters.length > 0 && (
                 <Link href={`/book/${bookId}/read/${chapters[0].id}`}>
                   <Button className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
@@ -307,6 +381,23 @@ export default function BookDetailPage() {
                   className={`h-4 w-4 ${liked ? "fill-current" : ""}`}
                 />
                 {liked ? "Liked" : "Like"}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={toggleLibrary}
+                className="gap-2 border-border text-foreground hover:bg-secondary bg-transparent"
+              >
+                {savedToLibrary ? (
+                  <>
+                    <BookmarkCheck className="h-4 w-4 text-primary" />
+                    Saved
+                  </>
+                ) : (
+                  <>
+                    <Bookmark className="h-4 w-4" />
+                    Save
+                  </>
+                )}
               </Button>
               <ShareButton
                 title={book.title}
@@ -365,6 +456,19 @@ export default function BookDetailPage() {
             </div>
           )}
         </div>
+
+        {similarBooks.length > 0 && (
+          <div className="mt-10">
+            <h2 className="mb-4 font-display text-xl font-bold text-foreground">
+              Similar Stories
+            </h2>
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+              {similarBooks.map((similarBook) => (
+                <BookCard key={similarBook.id} book={similarBook} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

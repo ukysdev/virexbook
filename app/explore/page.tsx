@@ -30,11 +30,7 @@ export default function ExplorePage() {
         .select("*, profiles(*)")
         .eq("status", "published")
         .order("created_at", { ascending: false })
-        .limit(50)
-
-      if (search.trim()) {
-        query = query.ilike("title", `%${search.trim()}%`)
-      }
+        .limit(120)
 
       if (genre !== "All") {
         query = query.eq("genre", genre)
@@ -51,7 +47,23 @@ export default function ExplorePage() {
       }
 
       const { data } = await query
-      setBooks((data || []) as Book[])
+      const allBooks = (data || []) as Book[]
+      const normalizedSearch = search.trim().toLowerCase()
+
+      const filteredBooks = normalizedSearch
+        ? allBooks.filter((book) => {
+            const titleMatch = book.title.toLowerCase().includes(normalizedSearch)
+            const tagMatch = (book.tags || []).some((tag) =>
+              tag.toLowerCase().includes(normalizedSearch)
+            )
+            const authorMatch =
+              book.profiles?.username?.toLowerCase().includes(normalizedSearch) ||
+              book.profiles?.display_name?.toLowerCase().includes(normalizedSearch)
+            return Boolean(titleMatch || tagMatch || authorMatch)
+          })
+        : allBooks
+
+      setBooks(filteredBooks)
       setLoading(false)
     }
 

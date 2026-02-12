@@ -61,12 +61,33 @@ async function getStaffPicks() {
   return (data || []) as Book[]
 }
 
+async function getContinueReading() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) return null
+
+  const { data } = await supabase
+    .from("reading_progress")
+    .select("chapter_id, book_id, books(title), chapters(title)")
+    .eq("user_id", user.id)
+    .not("chapter_id", "is", null)
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  return data
+}
+
 export default async function HomePage() {
-  const [featured, originals, trending, staffPicks] = await Promise.all([
+  const [featured, originals, trending, staffPicks, continueReading] = await Promise.all([
     getFeaturedBooks(),
     getOriginalBooks(),
     getTrendingBooks(),
     getStaffPicks(),
+    getContinueReading(),
   ])
 
   return (
@@ -115,6 +136,26 @@ export default async function HomePage() {
       </section>
 
       <div className="mx-auto max-w-7xl px-4 py-10">
+        {continueReading?.book_id && continueReading?.chapter_id && (
+          <section className="mb-10 rounded-xl border border-border bg-card p-5">
+            <h2 className="font-display text-lg font-bold text-foreground">
+              Continue Reading
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {continueReading.books?.title} • {continueReading.chapters?.title}
+            </p>
+            <Link
+              href={`/book/${continueReading.book_id}/read/${continueReading.chapter_id}`}
+              className="mt-4 inline-block"
+            >
+              <Button className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
+                <BookOpen className="h-4 w-4" />
+                Resume story
+              </Button>
+            </Link>
+          </section>
+        )}
+
         {/* VirexBooks Originals */}
         {originals.length > 0 && (
           <BookSection

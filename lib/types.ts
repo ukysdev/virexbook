@@ -42,6 +42,7 @@ export interface Chapter {
   content: string
   order_index: number
   status: 'draft' | 'published'
+  publish_at?: string | null
   word_count: number
   view_count: number
   created_at: string
@@ -55,6 +56,25 @@ export interface Comment {
   content: string
   created_at: string
   profiles?: Profile
+}
+
+export interface ReadingProgress {
+  id: string
+  user_id: string
+  book_id: string
+  chapter_id: string | null
+  scroll_position: number
+  updated_at: string
+  books?: Book
+  chapters?: Chapter
+}
+
+export interface ReadingList {
+  id: string
+  user_id: string
+  book_id: string
+  created_at: string
+  books?: Book
 }
 
 export const GENRES = [

@@ -22,6 +22,7 @@ import {
   X,
   UserPlus,
   UserMinus,
+  Trophy,
 } from "lucide-react"
 import { toast } from "sonner"
 
@@ -39,6 +40,7 @@ export default function ProfilePage() {
   const [editBio, setEditBio] = useState("")
   const [editAvatarUrl, setEditAvatarUrl] = useState("")
   const [followerCount, setFollowerCount] = useState(0)
+  const [weeklyWords, setWeeklyWords] = useState(0)
 
   const fetchData = useCallback(async () => {
     const supabase = createClient()
@@ -78,6 +80,23 @@ export default function ProfilePage() {
       .order("created_at", { ascending: false })
 
     if (booksData) setBooks(booksData as Book[])
+
+    const weekStart = new Date()
+    weekStart.setHours(0, 0, 0, 0)
+    weekStart.setDate(weekStart.getDate() - weekStart.getDay())
+
+    const { data: chapterStats } = await supabase
+      .from("chapters")
+      .select("word_count, updated_at")
+      .eq("user_id", prof.id)
+      .eq("status", "published")
+      .gte("updated_at", weekStart.toISOString())
+
+    const words = (chapterStats || []).reduce(
+      (acc, chapter) => acc + (chapter.word_count || 0),
+      0
+    )
+    setWeeklyWords(words)
 
     // Check following
     if (user && user.id !== prof.id) {
@@ -218,6 +237,12 @@ export default function ProfilePage() {
               </h1>
               {profile.is_verified && <VirexBadge type="verified" size="sm" />}
               {profile.is_staff && <VirexBadge type="admin" size="sm" />}
+              {weeklyWords >= 800 && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-500">
+                  <Trophy className="h-3 w-3" />
+                  Weekly Writer
+                </span>
+              )}
             </div>
 
             <p className="mt-0.5 text-sm text-muted-foreground">
