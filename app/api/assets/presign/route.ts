@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     }
 
     const key = createAssetKey(user.id, assetType, filename)
-    const { uploadUrl, publicUrl } = await createPresignedUploadUrl({
+    const { uploadUrl, uploadHeaders, publicUrl } = await createPresignedUploadUrl({
       key,
       contentType,
     })
@@ -59,6 +59,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       key,
       uploadUrl,
+      uploadHeaders,
       publicUrl,
     })
   } catch (error) {

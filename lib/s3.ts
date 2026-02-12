@@ -64,6 +64,7 @@ export async function createPresignedUploadUrl(params: {
     Bucket: bucket,
     Key: params.key,
     ContentType: params.contentType,
+    ACL: "public-read",
   })
 
   const uploadUrl = await getSignedUrl(client, command, {
@@ -72,6 +73,9 @@ export async function createPresignedUploadUrl(params: {
 
   return {
     uploadUrl,
+    uploadHeaders: {
+      "x-amz-acl": "public-read",
+    },
     publicUrl: getPublicAssetUrl(params.key),
   }
 }

@@ -3,6 +3,7 @@ export type UploadAssetType = "book-cover" | "avatar" | "asset"
 interface PresignResponse {
   key: string
   uploadUrl: string
+  uploadHeaders?: Record<string, string>
   publicUrl: string
 }
 
@@ -31,6 +32,7 @@ export async function uploadAssetFile(file: File, assetType: UploadAssetType) {
     method: "PUT",
     headers: {
       "Content-Type": file.type,
+      ...(presign.uploadHeaders ?? {}),
     },
     body: file,
   })
