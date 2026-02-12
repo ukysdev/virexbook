@@ -21,6 +21,7 @@ import { useState, useEffect, useCallback } from "react"
 import { BookOpen, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
+import { uploadAssetFile } from "@/lib/upload-asset"
 
 export default function EditBookPage() {
   const router = useRouter()
@@ -31,6 +32,8 @@ export default function EditBookPage() {
   const [description, setDescription] = useState("")
   const [genre, setGenre] = useState("Other")
   const [coverUrl, setCoverUrl] = useState("")
+  const [coverFile, setCoverFile] = useState<File | null>(null)
+  const [coverPreview, setCoverPreview] = useState("")
   const [tags, setTags] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -80,13 +83,27 @@ export default function EditBookPage() {
       return
     }
 
+    let uploadedCoverUrl: string | null = coverUrl.trim() || null
+
+    if (coverFile) {
+      try {
+        uploadedCoverUrl = await uploadAssetFile(coverFile, "book-cover")
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Cover upload failed"
+        toast.error(message)
+        setIsLoading(false)
+        return
+      }
+    }
+
     const { error } = await supabase
       .from("books")
       .update({
         title: title.trim(),
         description: description.trim() || null,
         genre,
-        cover_url: coverUrl.trim() || null,
+        cover_url: uploadedCoverUrl,
         tags: tags
           .split(",")
           .map((t) => t.trim())
@@ -103,6 +120,25 @@ export default function EditBookPage() {
 
     toast.success("Book updated")
     router.push(`/write/${bookId}`)
+  }
+
+  const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) {
+      setCoverFile(null)
+      setCoverPreview("")
+      return
+    }
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please choose an image file")
+      e.target.value = ""
+      return
+    }
+
+    setCoverFile(file)
+    const objectUrl = URL.createObjectURL(file)
+    setCoverPreview(objectUrl)
   }
 
   if (loading) {
@@ -171,11 +207,11 @@ export default function EditBookPage() {
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="cover" className="text-foreground">Cover Image URL</Label>
-            <Input id="cover" placeholder="https://example.com/cover.jpg" value={coverUrl} onChange={(e) => setCoverUrl(e.target.value)} className="bg-secondary border-border text-foreground placeholder:text-muted-foreground" />
-            {coverUrl && (
+            <Label htmlFor="cover" className="text-foreground">Cover Image</Label>
+            <Input id="cover" type="file" accept="image/*" onChange={handleCoverChange} className="bg-secondary border-border text-foreground placeholder:text-muted-foreground" />
+            {(coverPreview || coverUrl) && (
               <div className="mt-2 w-32 overflow-hidden rounded-lg border border-border">
-                <img src={coverUrl || "/placeholder.svg"} alt="Cover preview" className="aspect-[3/4] w-full object-cover" onError={(e) => { e.currentTarget.style.display = "none" }} />
+                <img src={coverPreview || coverUrl || "/placeholder.svg"} alt="Cover preview" className="aspect-[3/4] w-full object-cover" onError={(e) => { e.currentTarget.style.display = "none" }} />
               </div>
             )}
           </div>

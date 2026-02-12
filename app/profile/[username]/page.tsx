@@ -25,6 +25,7 @@ import {
   Trophy,
 } from "lucide-react"
 import { toast } from "sonner"
+import { uploadAssetFile } from "@/lib/upload-asset"
 
 export default function ProfilePage() {
   const params = useParams()
@@ -39,6 +40,8 @@ export default function ProfilePage() {
   const [editDisplayName, setEditDisplayName] = useState("")
   const [editBio, setEditBio] = useState("")
   const [editAvatarUrl, setEditAvatarUrl] = useState("")
+  const [editAvatarFile, setEditAvatarFile] = useState<File | null>(null)
+  const [editAvatarPreview, setEditAvatarPreview] = useState("")
   const [followerCount, setFollowerCount] = useState(0)
   const [weeklyWords, setWeeklyWords] = useState(0)
 
@@ -158,12 +161,24 @@ export default function ProfilePage() {
     if (!profile) return
     const supabase = createClient()
 
+    let uploadedAvatarUrl: string | null = editAvatarUrl.trim() || null
+    if (editAvatarFile) {
+      try {
+        uploadedAvatarUrl = await uploadAssetFile(editAvatarFile, "avatar")
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Avatar upload failed"
+        toast.error(message)
+        return
+      }
+    }
+
     const { error } = await supabase
       .from("profiles")
       .update({
         display_name: editDisplayName.trim() || null,
         bio: editBio.trim() || null,
-        avatar_url: editAvatarUrl.trim() || null,
+        avatar_url: uploadedAvatarUrl,
         updated_at: new Date().toISOString(),
       })
       .eq("id", profile.id)
@@ -177,10 +192,28 @@ export default function ProfilePage() {
       ...profile,
       display_name: editDisplayName.trim() || null,
       bio: editBio.trim() || null,
-      avatar_url: editAvatarUrl.trim() || null,
+      avatar_url: uploadedAvatarUrl,
     })
     setEditing(false)
     toast.success("Profile updated!")
+  }
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) {
+      setEditAvatarFile(null)
+      setEditAvatarPreview("")
+      return
+    }
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please choose an image file")
+      e.target.value = ""
+      return
+    }
+
+    setEditAvatarFile(file)
+    setEditAvatarPreview(URL.createObjectURL(file))
   }
 
   if (loading) {
@@ -354,13 +387,22 @@ export default function ProfilePage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label className="text-foreground">Avatar URL</Label>
+              <Label className="text-foreground">Avatar Image</Label>
               <Input
-                value={editAvatarUrl}
-                onChange={(e) => setEditAvatarUrl(e.target.value)}
-                placeholder="https://example.com/avatar.jpg"
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarChange}
                 className="bg-secondary border-border text-foreground placeholder:text-muted-foreground"
               />
+              {(editAvatarPreview || editAvatarUrl) && (
+                <div className="mt-2 h-20 w-20 overflow-hidden rounded-full border border-border">
+                  <img
+                    src={editAvatarPreview || editAvatarUrl || "/placeholder-user.jpg"}
+                    alt="Avatar preview"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              )}
             </div>
             <Button
               onClick={saveProfile}

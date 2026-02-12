@@ -21,12 +21,15 @@ import { useState } from "react"
 import { BookOpen, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
+import { uploadAssetFile } from "@/lib/upload-asset"
 
 export default function NewBookPage() {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [genre, setGenre] = useState("Other")
   const [coverUrl, setCoverUrl] = useState("")
+  const [coverFile, setCoverFile] = useState<File | null>(null)
+  const [coverPreview, setCoverPreview] = useState("")
   const [tags, setTags] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
@@ -46,6 +49,20 @@ export default function NewBookPage() {
       return
     }
 
+    let uploadedCoverUrl: string | null = coverUrl.trim() || null
+
+    if (coverFile) {
+      try {
+        uploadedCoverUrl = await uploadAssetFile(coverFile, "book-cover")
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Cover upload failed"
+        toast.error(message)
+        setIsLoading(false)
+        return
+      }
+    }
+
     const { data, error } = await supabase
       .from("books")
       .insert({
@@ -53,7 +70,7 @@ export default function NewBookPage() {
         title: title.trim(),
         description: description.trim() || null,
         genre,
-        cover_url: coverUrl.trim() || null,
+        cover_url: uploadedCoverUrl,
         tags: tags
           .split(",")
           .map((t) => t.trim())
@@ -70,6 +87,25 @@ export default function NewBookPage() {
 
     toast.success("Book created!")
     router.push(`/write/${data.id}`)
+  }
+
+  const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) {
+      setCoverFile(null)
+      setCoverPreview("")
+      return
+    }
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please choose an image file")
+      e.target.value = ""
+      return
+    }
+
+    setCoverFile(file)
+    const objectUrl = URL.createObjectURL(file)
+    setCoverPreview(objectUrl)
   }
 
   return (
@@ -144,19 +180,19 @@ export default function NewBookPage() {
 
           <div className="grid gap-2">
             <Label htmlFor="cover" className="text-foreground">
-              Cover Image URL
+              Cover Image
             </Label>
             <Input
               id="cover"
-              placeholder="https://example.com/cover.jpg"
-              value={coverUrl}
-              onChange={(e) => setCoverUrl(e.target.value)}
+              type="file"
+              accept="image/*"
+              onChange={handleCoverChange}
               className="bg-secondary border-border text-foreground placeholder:text-muted-foreground"
             />
-            {coverUrl && (
+            {(coverPreview || coverUrl) && (
               <div className="mt-2 w-32 overflow-hidden rounded-lg border border-border">
                 <img
-                  src={coverUrl || "/placeholder.svg"}
+                  src={coverPreview || coverUrl || "/placeholder.svg"}
                   alt="Cover preview"
                   className="aspect-[3/4] w-full object-cover"
                   onError={(e) => {

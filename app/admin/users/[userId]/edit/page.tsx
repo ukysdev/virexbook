@@ -11,6 +11,7 @@ import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import { toast } from "sonner"
 import { ArrowLeft } from "lucide-react"
+import { uploadAssetFile } from "@/lib/upload-asset"
 
 export default function AdminUserEdit() {
   const params = useParams()
@@ -22,6 +23,8 @@ export default function AdminUserEdit() {
   const [displayName, setDisplayName] = useState("")
   const [bio, setBio] = useState("")
   const [avatarUrl, setAvatarUrl] = useState("")
+  const [avatarFile, setAvatarFile] = useState<File | null>(null)
+  const [avatarPreview, setAvatarPreview] = useState("")
   const [isAdmin, setIsAdmin] = useState(false)
   const [isStaff, setIsStaff] = useState(false)
   const [isVerified, setIsVerified] = useState(false)
@@ -53,11 +56,24 @@ export default function AdminUserEdit() {
     setIsLoading(true)
     const supabase = createClient()
 
+    let uploadedAvatarUrl: string | null = avatarUrl.trim() || null
+    if (avatarFile) {
+      try {
+        uploadedAvatarUrl = await uploadAssetFile(avatarFile, "avatar")
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Avatar upload failed"
+        toast.error(message)
+        setIsLoading(false)
+        return
+      }
+    }
+
     const { error } = await supabase.from("profiles").update({
       username: username.trim(),
       display_name: displayName.trim() || null,
       bio: bio.trim() || null,
-      avatar_url: avatarUrl.trim() || null,
+      avatar_url: uploadedAvatarUrl,
       is_admin: isAdmin,
       is_staff: isStaff,
       is_verified: isVerified,
@@ -72,6 +88,24 @@ export default function AdminUserEdit() {
 
     toast.success("User updated")
     router.push("/admin")
+  }
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) {
+      setAvatarFile(null)
+      setAvatarPreview("")
+      return
+    }
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please choose an image file")
+      e.target.value = ""
+      return
+    }
+
+    setAvatarFile(file)
+    setAvatarPreview(URL.createObjectURL(file))
   }
 
   const handleDelete = async () => {
@@ -126,8 +160,13 @@ export default function AdminUserEdit() {
           </div>
 
           <div className="grid gap-2">
-            <Label>Avatar URL</Label>
-            <Input value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} className="bg-secondary" />
+            <Label>Avatar Image</Label>
+            <Input type="file" accept="image/*" onChange={handleAvatarChange} className="bg-secondary" />
+            {(avatarPreview || avatarUrl) && (
+              <div className="mt-2 h-20 w-20 overflow-hidden rounded-full border border-border">
+                <img src={avatarPreview || avatarUrl || "/placeholder-user.jpg"} alt="Avatar preview" className="h-full w-full object-cover" />
+              </div>
+            )}
           </div>
 
           <div className="grid gap-2">

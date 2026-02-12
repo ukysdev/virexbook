@@ -12,6 +12,7 @@ import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import { toast } from "sonner"
 import { BookOpen, ArrowLeft } from "lucide-react"
+import { uploadAssetFile } from "@/lib/upload-asset"
 
 export default function AdminBookEdit() {
   const params = useParams()
@@ -23,6 +24,8 @@ export default function AdminBookEdit() {
   const [description, setDescription] = useState("")
   const [genre, setGenre] = useState("Other")
   const [coverUrl, setCoverUrl] = useState("")
+  const [coverFile, setCoverFile] = useState<File | null>(null)
+  const [coverPreview, setCoverPreview] = useState("")
   const [tags, setTags] = useState("")
   const [status, setStatus] = useState("draft")
   const [isLoading, setIsLoading] = useState(false)
@@ -51,11 +54,25 @@ export default function AdminBookEdit() {
     e.preventDefault()
     setIsLoading(true)
     const supabase = createClient()
+
+    let uploadedCoverUrl: string | null = coverUrl.trim() || null
+    if (coverFile) {
+      try {
+        uploadedCoverUrl = await uploadAssetFile(coverFile, "book-cover")
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Cover upload failed"
+        toast.error(message)
+        setIsLoading(false)
+        return
+      }
+    }
+
     const { error } = await supabase.from("books").update({
       title: title.trim(),
       description: description.trim() || null,
       genre,
-      cover_url: coverUrl.trim() || null,
+      cover_url: uploadedCoverUrl,
       tags: tags.split(",").map(t => t.trim()).filter(Boolean),
       status,
       updated_at: new Date().toISOString(),
@@ -68,6 +85,24 @@ export default function AdminBookEdit() {
     }
     toast.success("Book updated")
     router.push("/admin")
+  }
+
+  const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) {
+      setCoverFile(null)
+      setCoverPreview("")
+      return
+    }
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please choose an image file")
+      e.target.value = ""
+      return
+    }
+
+    setCoverFile(file)
+    setCoverPreview(URL.createObjectURL(file))
   }
 
   const handleDelete = async () => {
@@ -116,8 +151,13 @@ export default function AdminBookEdit() {
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="cover">Cover URL</Label>
-            <Input id="cover" value={coverUrl} onChange={(e) => setCoverUrl(e.target.value)} className="bg-secondary" />
+            <Label htmlFor="cover">Cover Image</Label>
+            <Input id="cover" type="file" accept="image/*" onChange={handleCoverChange} className="bg-secondary" />
+            {(coverPreview || coverUrl) && (
+              <div className="mt-2 w-32 overflow-hidden rounded-lg border border-border">
+                <img src={coverPreview || coverUrl || "/placeholder.svg"} alt="Cover preview" className="aspect-[3/4] w-full object-cover" />
+              </div>
+            )}
           </div>
 
           <div className="grid gap-2">
