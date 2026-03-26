@@ -2,7 +2,7 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-RUN corepack enable
+RUN corepack enable && corepack prepare pnpm@9 --activate
 
 ARG NEXT_PUBLIC_SUPABASE_URL
 ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
