@@ -6,7 +6,7 @@ RUN apk add --no-cache python3 make g++ bash
 
 RUN npm install -g pnpm@9
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 RUN pnpm install --frozen-lockfile
 

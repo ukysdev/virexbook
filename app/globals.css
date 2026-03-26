@@ -10,6 +10,8 @@
 
 @layer base {
   :root {
+    --font-inter: "Helvetica Neue", Arial, sans-serif;
+    --font-space-grotesk: "Trebuchet MS", "Arial Narrow", sans-serif;
     --background: 220 20% 4%;
     --foreground: 60 10% 95%;
     --card: 220 18% 7%;
