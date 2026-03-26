@@ -2,12 +2,13 @@ import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { getS3Env } from "@/lib/env"
 
-export type AssetType = "book-cover" | "avatar" | "asset"
+export type AssetType = "book-cover" | "avatar" | "asset" | "chapter-audio"
 
 const ASSET_PREFIX: Record<AssetType, string> = {
   "book-cover": "book-covers",
   avatar: "avatars",
   asset: "assets",
+  "chapter-audio": "chapter-audio",
 }
 
 function sanitizeFilename(filename: string) {

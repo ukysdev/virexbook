@@ -58,6 +58,7 @@ create table if not exists public.chapters (
   user_id uuid not null references public.profiles(id) on delete cascade,
   title text not null,
   content text default '',
+  audio_url text,
   order_index int not null default 0,
   status text not null default 'draft' check (status in ('draft', 'published')),
   word_count int default 0,

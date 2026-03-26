@@ -1,4 +1,4 @@
-export type UploadAssetType = "book-cover" | "avatar" | "asset"
+export type UploadAssetType = "book-cover" | "avatar" | "asset" | "chapter-audio"
 
 interface PresignResponse {
   key: string

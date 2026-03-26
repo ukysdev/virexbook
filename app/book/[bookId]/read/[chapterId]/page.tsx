@@ -15,6 +15,7 @@ import {
   ArrowLeft,
   ArrowRight,
   BookOpen,
+  Headphones,
   MessageCircle,
   Send,
   ChevronUp,
@@ -356,6 +357,21 @@ export default function ReaderPage() {
             </Button>
           )}
         </div>
+
+        {chapter.audio_url && (
+          <section className="mb-6 rounded-xl border border-border bg-card p-4">
+            <div className="mb-3 flex items-center gap-2">
+              <Headphones className="h-4 w-4 text-primary" />
+              <h2 className="text-sm font-semibold text-foreground">
+                Audiobook for this chapter
+              </h2>
+            </div>
+            <audio controls preload="none" className="w-full">
+              <source src={chapter.audio_url} />
+              Your browser does not support audio playback.
+            </audio>
+          </section>
+        )}
 
         {/* Content */}
         <article className="max-w-none">

@@ -40,6 +40,7 @@ export interface Chapter {
   user_id: string
   title: string
   content: string
+  audio_url: string | null
   order_index: number
   status: 'draft' | 'published'
   publish_at?: string | null

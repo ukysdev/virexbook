@@ -11,8 +11,25 @@ const ALLOWED_IMAGE_CONTENT_TYPES = new Set([
   "image/svg+xml",
 ])
 
+const ALLOWED_AUDIO_CONTENT_TYPES = new Set([
+  "audio/mpeg",
+  "audio/mp3",
+  "audio/mp4",
+  "audio/x-m4a",
+  "audio/aac",
+  "audio/wav",
+  "audio/x-wav",
+  "audio/ogg",
+  "audio/webm",
+])
+
 function getAssetType(value: unknown): AssetType {
-  if (value === "book-cover" || value === "avatar" || value === "asset") {
+  if (
+    value === "book-cover" ||
+    value === "avatar" ||
+    value === "asset" ||
+    value === "chapter-audio"
+  ) {
     return value
   }
   return "asset"
@@ -44,7 +61,9 @@ export async function POST(req: Request) {
     const isAllowedContentType =
       assetType === "asset"
         ? true
-        : ALLOWED_IMAGE_CONTENT_TYPES.has(contentType)
+        : assetType === "chapter-audio"
+          ? ALLOWED_AUDIO_CONTENT_TYPES.has(contentType)
+          : ALLOWED_IMAGE_CONTENT_TYPES.has(contentType)
 
     if (!isAllowedContentType) {
       return NextResponse.json({ error: "Unsupported file type" }, { status: 400 })

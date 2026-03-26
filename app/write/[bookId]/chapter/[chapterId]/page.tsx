@@ -3,6 +3,7 @@
 import React from "react"
 
 import { createClient } from "@/lib/supabase/client"
+import { uploadAssetFile } from "@/lib/upload-asset"
 import { Navbar } from "@/components/navbar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,7 +11,7 @@ import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState, useCallback, useRef } from "react"
 import type { Chapter } from "@/lib/types"
-import { ArrowLeft, Save, Globe, Upload, CalendarClock } from "lucide-react"
+import { ArrowLeft, Save, Globe, Upload, CalendarClock, Headphones, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 
 export default function ChapterEditorPage() {
@@ -21,6 +22,8 @@ export default function ChapterEditorPage() {
   const [chapter, setChapter] = useState<Chapter | null>(null)
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
+  const [audioUrl, setAudioUrl] = useState("")
+  const [audioUploading, setAudioUploading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [loading, setLoading] = useState(true)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
@@ -41,6 +44,7 @@ export default function ChapterEditorPage() {
       setChapter(ch)
       setTitle(ch.title)
       setContent(ch.content)
+      setAudioUrl(ch.audio_url || "")
       setPublishAt(
         ch.publish_at ? new Date(ch.publish_at).toISOString().slice(0, 16) : ""
       )
@@ -63,6 +67,7 @@ export default function ChapterEditorPage() {
         .update({
           title: title.trim(),
           content,
+          audio_url: audioUrl.trim() || null,
           publish_at: publishAt ? new Date(publishAt).toISOString() : null,
           word_count: wordCount,
           updated_at: new Date().toISOString(),
@@ -73,11 +78,24 @@ export default function ChapterEditorPage() {
       if (error) {
         if (showToast) toast.error("Failed to save")
       } else {
+        setChapter((prev) =>
+          prev
+            ? {
+                ...prev,
+                title: title.trim(),
+                content,
+                audio_url: audioUrl.trim() || null,
+                publish_at: publishAt ? new Date(publishAt).toISOString() : null,
+                word_count: wordCount,
+                updated_at: new Date().toISOString(),
+              }
+            : prev
+        )
         setLastSaved(new Date())
         if (showToast) toast.success("Saved!")
       }
     },
-    [content, title, chapterId, publishAt]
+    [audioUrl, content, title, chapterId, publishAt]
   )
 
   // Auto-save every 30 seconds
@@ -89,7 +107,11 @@ export default function ChapterEditorPage() {
     }
 
     autoSaveTimerRef.current = setTimeout(() => {
-      if (content !== chapter.content || title !== chapter.title) {
+      if (
+        content !== chapter.content ||
+        title !== chapter.title ||
+        audioUrl !== (chapter.audio_url || "")
+      ) {
         saveChapter(false)
       }
     }, 30000)
@@ -99,7 +121,7 @@ export default function ChapterEditorPage() {
         clearTimeout(autoSaveTimerRef.current)
       }
     }
-  }, [content, title, chapter, saveChapter])
+  }, [audioUrl, content, title, chapter, saveChapter])
 
   // Keyboard shortcut Ctrl+S
   useEffect(() => {
@@ -148,6 +170,31 @@ export default function ChapterEditorPage() {
       toast.success(
         newStatus === "published" ? "Chapter published!" : "Chapter unpublished"
       )
+    }
+  }
+
+  const handleAudioUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (!file.type.startsWith("audio/")) {
+      toast.error("Please upload an audio file")
+      e.target.value = ""
+      return
+    }
+
+    try {
+      setAudioUploading(true)
+      const uploadedAudioUrl = await uploadAssetFile(file, "chapter-audio")
+      setAudioUrl(uploadedAudioUrl)
+      toast.success("Audiobook file uploaded")
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Audio upload failed"
+      toast.error(message)
+    } finally {
+      setAudioUploading(false)
+      e.target.value = ""
     }
   }
 
@@ -280,6 +327,69 @@ export default function ChapterEditorPage() {
           <p className="mt-2 text-xs text-muted-foreground">
             Save the chapter after setting date/time. Use `/api/cron/publish-scheduled` with a free cron service to auto-publish.
           </p>
+        </div>
+
+        <div className="mb-4 rounded-xl border border-border bg-card p-4">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-foreground">
+                <Headphones className="h-4 w-4" />
+                Audiobook audio for this chapter
+              </label>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Readers can listen to this chapter when an audio file is attached.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="relative">
+                <input
+                  type="file"
+                  accept="audio/*"
+                  onChange={handleAudioUpload}
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  aria-label="Upload audiobook audio"
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={audioUploading}
+                  className="gap-1.5 border-border text-foreground hover:bg-secondary pointer-events-none bg-transparent"
+                >
+                  <Upload className="h-3.5 w-3.5" />
+                  {audioUploading ? "Uploading..." : "Upload audio"}
+                </Button>
+              </div>
+              {audioUrl && (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setAudioUrl("")}
+                  className="gap-1.5 bg-transparent"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  Remove
+                </Button>
+              )}
+            </div>
+          </div>
+
+          {audioUrl ? (
+            <div className="mt-4 space-y-2">
+              <audio controls preload="none" className="w-full">
+                <source src={audioUrl} />
+                Your browser does not support audio playback.
+              </audio>
+              <p className="break-all text-xs text-muted-foreground">
+                {audioUrl}
+              </p>
+            </div>
+          ) : (
+            <p className="mt-4 text-sm text-muted-foreground">
+              No audiobook audio uploaded yet.
+            </p>
+          )}
         </div>
 
         {/* Title */}
