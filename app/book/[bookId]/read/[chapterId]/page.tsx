@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ShareButton } from "@/components/share-button"
 import TTSButton from "@/components/tts-button"
+import ChapterAudioPlayer from "@/components/chapter-audio-player"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { useEffect, useState, useCallback } from "react"
@@ -15,7 +16,6 @@ import {
   ArrowLeft,
   ArrowRight,
   BookOpen,
-  Headphones,
   MessageCircle,
   Send,
   ChevronUp,
@@ -359,18 +359,11 @@ export default function ReaderPage() {
         </div>
 
         {chapter.audio_url && (
-          <section className="mb-6 rounded-xl border border-border bg-card p-4">
-            <div className="mb-3 flex items-center gap-2">
-              <Headphones className="h-4 w-4 text-primary" />
-              <h2 className="text-sm font-semibold text-foreground">
-                Audiobook for this chapter
-              </h2>
-            </div>
-            <audio controls preload="none" className="w-full">
-              <source src={chapter.audio_url} />
-              Your browser does not support audio playback.
-            </audio>
-          </section>
+          <ChapterAudioPlayer
+            src={chapter.audio_url}
+            title={`${chapter.title} - ${book.title}`}
+            className="mb-6"
+          />
         )}
 
         {/* Content */}

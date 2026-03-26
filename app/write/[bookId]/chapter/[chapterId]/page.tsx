@@ -4,6 +4,7 @@ import React from "react"
 
 import { createClient } from "@/lib/supabase/client"
 import { uploadAssetFile } from "@/lib/upload-asset"
+import ChapterAudioPlayer from "@/components/chapter-audio-player"
 import { Navbar } from "@/components/navbar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -377,10 +378,7 @@ export default function ChapterEditorPage() {
 
           {audioUrl ? (
             <div className="mt-4 space-y-2">
-              <audio controls preload="none" className="w-full">
-                <source src={audioUrl} />
-                Your browser does not support audio playback.
-              </audio>
+              <ChapterAudioPlayer src={audioUrl} title={title || "Chapter audio preview"} />
               <p className="break-all text-xs text-muted-foreground">
                 {audioUrl}
               </p>
