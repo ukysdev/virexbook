@@ -4,7 +4,7 @@ WORKDIR /app
 
 RUN apk add --no-cache python3 make g++ bash
 
-RUN npm install -g pnpm@8
+RUN npm install -g pnpm@9
 
 COPY package.json pnpm-lock.yaml ./
 
