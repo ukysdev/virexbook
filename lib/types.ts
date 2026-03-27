@@ -79,6 +79,21 @@ export interface ReadingList {
   books?: Book
 }
 
+export interface UserSettings {
+  user_id: string
+  preferred_language: string
+  theme: "system" | "light" | "dark"
+  autoplay_audio: boolean
+  email_notifications: boolean
+  marketing_emails: boolean
+  analytics_enabled: boolean
+  public_profile: boolean
+  show_reading_activity: boolean
+  mature_content: boolean
+  created_at?: string
+  updated_at?: string
+}
+
 export const GENRES = [
   'Fantasy',
   'Romance',

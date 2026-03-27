@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Mail, Lock, ToggleRight, AlertTriangle } from "lucide-react"
+import { Mail, Lock, ToggleRight, AlertTriangle, SlidersHorizontal } from "lucide-react"
 import Link from "next/link"
 
 interface UserData {
@@ -88,6 +88,23 @@ export default function SettingsPage() {
             <CardContent>
               <Button variant="outline" className="w-full">
                 Privacy Settings →
+              </Button>
+            </CardContent>
+          </Link>
+        </Card>
+
+        <Card className="hover:border-primary/50 transition-colors cursor-pointer">
+          <Link href="/settings/preferences" className="block">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <SlidersHorizontal className="h-4 w-4" />
+                <CardTitle>Preferences</CardTitle>
+              </div>
+              <CardDescription>Reading, notifications, and visibility</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button variant="outline" className="w-full">
+                Manage Preferences →
               </Button>
             </CardContent>
           </Link>

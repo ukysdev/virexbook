@@ -7,6 +7,7 @@ import {
   User,
   Shield,
   AlertTriangle,
+  SlidersHorizontal,
 } from "lucide-react"
 
 const routes = [
@@ -24,6 +25,11 @@ const routes = [
     label: "Privacy",
     href: "/settings/privacy",
     icon: Shield,
+  },
+  {
+    label: "Preferences",
+    href: "/settings/preferences",
+    icon: SlidersHorizontal,
   },
   {
     label: "Danger Zone",
