@@ -238,22 +238,6 @@ export default function DocsPage() {
               </pre>
             </div>
           </section>
-
-          <section className="rounded-3xl border border-border bg-card p-6">
-            <h2 className="font-display text-2xl font-bold text-foreground">
-              Migration
-            </h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Run the user settings migration before using the preferences API.
-            </p>
-            <pre className="mt-4 overflow-x-auto rounded-2xl bg-background p-4 text-sm text-foreground">
-              <code>scripts/006_user_settings.sql</code>
-            </pre>
-            <p className="mt-4 text-sm text-muted-foreground">
-              The markdown source remains available in <code>docs/API.md</code>
-              {" "}inside the repository.
-            </p>
-          </section>
         </div>
       </div>
     </div>

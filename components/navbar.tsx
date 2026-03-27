@@ -68,8 +68,7 @@ export function Navbar() {
   const navLinks = [
     { href: "/", label: "Home", icon: BookOpen },
     { href: "/explore", label: "Explore", icon: Compass },
-    { href: "/audiobooks", label: "Audiobooks", icon: Headphones },
-    { href: "/docs", label: "Docs", icon: FileText },
+    { href: "/audiobooks", label: "Audiobooks", icon: Headphones }
   ]
 
   return (
