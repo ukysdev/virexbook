@@ -1,7 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
-import { useSearchParams } from "next/navigation"
+import { useEffect, useState } from "react"
 import { Search, BookOpen, SlidersHorizontal, X, Headphones } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { Navbar } from "@/components/navbar"
@@ -11,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { GENRES, type Book } from "@/lib/types"
 import { extractAudiobookBookIds, markBooksAsAudiobooks } from "@/lib/audiobooks"
 
-type ExploreFilter =
+export type ExploreFilter =
   | "all"
   | "originals"
   | "featured"
@@ -22,6 +21,7 @@ type ExploreFilter =
 interface DiscoverBooksPageProps {
   title: string
   description: string
+  initialFilter?: ExploreFilter
   forcedFilter?: ExploreFilter
 }
 
@@ -41,15 +41,9 @@ function isExploreFilter(value: string | null): value is ExploreFilter {
 export function DiscoverBooksPage({
   title,
   description,
+  initialFilter = "all",
   forcedFilter,
 }: DiscoverBooksPageProps) {
-  const searchParams = useSearchParams()
-  const searchFilter = searchParams.get("filter")
-  const initialFilter = useMemo<ExploreFilter>(() => {
-    if (forcedFilter) return forcedFilter
-    return isExploreFilter(searchFilter) ? searchFilter : "all"
-  }, [forcedFilter, searchFilter])
-
   const [books, setBooks] = useState<Book[]>([])
   const [search, setSearch] = useState("")
   const [genre, setGenre] = useState<string>("All")
