@@ -25,6 +25,7 @@ import {
   Rss,
   Library,
   Headphones,
+  FileText,
 } from "lucide-react"
 import { useEffect, useState } from "react"
 import type { Profile } from "@/lib/types"
@@ -68,6 +69,7 @@ export function Navbar() {
     { href: "/", label: "Home", icon: BookOpen },
     { href: "/explore", label: "Explore", icon: Compass },
     { href: "/audiobooks", label: "Audiobooks", icon: Headphones },
+    { href: "/docs", label: "Docs", icon: FileText },
   ]
 
   return (

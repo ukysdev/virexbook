@@ -91,11 +91,3 @@ Allowed fields:
   "mature_content": false
 }
 ```
-
-## Database migration
-
-Run the new SQL migration before using the settings endpoint:
-
-- `scripts/006_user_settings.sql`
-
-This creates `public.user_settings` with RLS policies for per-user access.
