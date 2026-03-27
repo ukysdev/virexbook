@@ -31,6 +31,7 @@ export interface Book {
   language: string
   created_at: string
   updated_at: string
+  has_audio?: boolean
   profiles?: Profile
 }
 

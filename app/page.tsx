@@ -1,18 +1,34 @@
 import React from "react"
+import Link from "next/link"
+import {
+  ArrowRight,
+  BookOpen,
+  Headphones,
+  PenTool,
+  ShieldCheck,
+  Star,
+  TrendingUp,
+} from "lucide-react"
 import { createClient } from "@/lib/supabase/server"
 import { Navbar } from "@/components/navbar"
 import { BookCard } from "@/components/book-card"
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import {
-  BookOpen,
-  TrendingUp,
-  Star,
-  ShieldCheck,
-  ArrowRight,
-  PenTool,
-} from "lucide-react"
 import type { Book } from "@/lib/types"
+import { extractAudiobookBookIds, markBooksAsAudiobooks } from "@/lib/audiobooks"
+
+type ContinueReadingRow = {
+  chapter_id: string | null
+  book_id: string
+  books?: { title: string } | Array<{ title: string }> | null
+  chapters?: { title: string } | Array<{ title: string }> | null
+}
+
+function getRelationTitle(
+  relation?: { title: string } | Array<{ title: string }> | null
+) {
+  if (!relation) return null
+  return Array.isArray(relation) ? relation[0]?.title ?? null : relation.title
+}
 
 async function getFeaturedBooks() {
   const supabase = await createClient()
@@ -61,6 +77,29 @@ async function getStaffPicks() {
   return (data || []) as Book[]
 }
 
+async function getAudiobookBooks() {
+  const supabase = await createClient()
+  const { data: audiobookChapters } = await supabase
+    .from("chapters")
+    .select("book_id")
+    .eq("status", "published")
+    .not("audio_url", "is", null)
+    .limit(2000)
+
+  const audiobookBookIds = extractAudiobookBookIds(audiobookChapters)
+  if (audiobookBookIds.length === 0) return []
+
+  const { data } = await supabase
+    .from("books")
+    .select("*, profiles(*)")
+    .eq("status", "published")
+    .in("id", audiobookBookIds)
+    .order("created_at", { ascending: false })
+    .limit(6)
+
+  return markBooksAsAudiobooks((data || []) as Book[], audiobookBookIds)
+}
+
 async function getContinueReading() {
   const supabase = await createClient()
   const {
@@ -78,23 +117,24 @@ async function getContinueReading() {
     .limit(1)
     .maybeSingle()
 
-  return data
+  return (data as ContinueReadingRow | null) || null
 }
 
 export default async function HomePage() {
-  const [featured, originals, trending, staffPicks, continueReading] = await Promise.all([
-    getFeaturedBooks(),
-    getOriginalBooks(),
-    getTrendingBooks(),
-    getStaffPicks(),
-    getContinueReading(),
-  ])
+  const [featured, originals, trending, staffPicks, audiobooks, continueReading] =
+    await Promise.all([
+      getFeaturedBooks(),
+      getOriginalBooks(),
+      getTrendingBooks(),
+      getStaffPicks(),
+      getAudiobookBooks(),
+      getContinueReading(),
+    ])
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero Section */}
       <section className="relative overflow-hidden border-b border-border">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
         <div className="relative mx-auto max-w-7xl px-4 py-16 md:py-24">
@@ -106,7 +146,7 @@ export default async function HomePage() {
             <h1 className="font-display text-4xl font-bold tracking-tight text-foreground md:text-5xl lg:text-6xl text-balance">
               Write Your Story. Share It With the World.
             </h1>
-            <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
+            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
               Discover thousands of stories from talented authors or start
               writing your own. VirexBooks is your home for creative writing.
             </p>
@@ -124,7 +164,7 @@ export default async function HomePage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="gap-2 border-border text-foreground hover:bg-secondary bg-transparent"
+                  className="gap-2 border-border bg-transparent text-foreground hover:bg-secondary"
                 >
                   <PenTool className="h-5 w-5" />
                   Start Writing
@@ -142,7 +182,8 @@ export default async function HomePage() {
               Continue Reading
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              {continueReading.books?.title} • {continueReading.chapters?.title}
+              {getRelationTitle(continueReading.books)} •{" "}
+              {getRelationTitle(continueReading.chapters)}
             </p>
             <Link
               href={`/book/${continueReading.book_id}/read/${continueReading.chapter_id}`}
@@ -156,7 +197,6 @@ export default async function HomePage() {
           </section>
         )}
 
-        {/* VirexBooks Originals */}
         {originals.length > 0 && (
           <BookSection
             title="VirexBooks Originals"
@@ -166,7 +206,6 @@ export default async function HomePage() {
           />
         )}
 
-        {/* Featured */}
         {featured.length > 0 && (
           <BookSection
             title="Featured Stories"
@@ -176,7 +215,6 @@ export default async function HomePage() {
           />
         )}
 
-        {/* Staff Picks */}
         {staffPicks.length > 0 && (
           <BookSection
             title="Staff Picks"
@@ -186,7 +224,15 @@ export default async function HomePage() {
           />
         )}
 
-        {/* Trending */}
+        {audiobooks.length > 0 && (
+          <BookSection
+            title="Audiobooks"
+            icon={<Headphones className="h-5 w-5 text-sky-500" />}
+            books={audiobooks}
+            href="/audiobooks"
+          />
+        )}
+
         {trending.length > 0 && (
           <BookSection
             title="Trending Now"
@@ -196,7 +242,6 @@ export default async function HomePage() {
           />
         )}
 
-        {/* Empty state */}
         {trending.length === 0 &&
           originals.length === 0 &&
           featured.length === 0 && (
@@ -246,7 +291,7 @@ function BookSection({
         </div>
         <Link
           href={href}
-          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition-colors"
+          className="flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-primary"
         >
           View all
           <ArrowRight className="h-4 w-4" />

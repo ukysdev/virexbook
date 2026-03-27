@@ -48,11 +48,11 @@ export default function AdminPage() {
     const [booksRes, usersRes, chaptersRes, commentsRes, likesRes, followsRes, readingListsRes] = await Promise.all([
       supabase.from("books").select("*, profiles(*)").order("created_at", { ascending: false }).limit(200),
       supabase.from("profiles").select("*").order("created_at", { ascending: false }).limit(200),
-      supabase.from("chapters").select("*").order("created_at", { descending: true }).limit(200),
-      supabase.from("comments").select("*, profiles(*)").order("created_at", { descending: true }).limit(200),
-      supabase.from("likes").select("*" ).order("created_at", { descending: true }).limit(200),
-      supabase.from("follows").select("*" ).order("created_at", { descending: true }).limit(200),
-      supabase.from("reading_lists").select("*" ).order("created_at", { descending: true }).limit(200),
+      supabase.from("chapters").select("*").order("created_at", { ascending: false }).limit(200),
+      supabase.from("comments").select("*, profiles(*)").order("created_at", { ascending: false }).limit(200),
+      supabase.from("likes").select("*" ).order("created_at", { ascending: false }).limit(200),
+      supabase.from("follows").select("*" ).order("created_at", { ascending: false }).limit(200),
+      supabase.from("reading_lists").select("*" ).order("created_at", { ascending: false }).limit(200),
     ])
 
     setBooks((booksRes.data || []) as Book[])

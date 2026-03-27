@@ -24,6 +24,7 @@ import {
   X,
   Rss,
   Library,
+  Headphones,
 } from "lucide-react"
 import { useEffect, useState } from "react"
 import type { Profile } from "@/lib/types"
@@ -66,6 +67,7 @@ export function Navbar() {
   const navLinks = [
     { href: "/", label: "Home", icon: BookOpen },
     { href: "/explore", label: "Explore", icon: Compass },
+    { href: "/audiobooks", label: "Audiobooks", icon: Headphones },
   ]
 
   return (

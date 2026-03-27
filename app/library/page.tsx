@@ -52,8 +52,8 @@ export default function LibraryPage() {
     ])
 
     const books = (savedRes.data || [])
-      .map((row) => row.books)
-      .filter(Boolean) as Book[]
+      .map((row) => (row.books as unknown as Book | null))
+      .filter((book): book is Book => Boolean(book))
 
     setSavedBooks(books)
     setProgressRows((progressRes.data || []) as ReadingProgress[])

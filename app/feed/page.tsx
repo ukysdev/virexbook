@@ -6,10 +6,15 @@ import { Navbar } from "@/components/navbar"
 import { BookCard } from "@/components/book-card"
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/supabase/client"
-import type { Book, Chapter } from "@/lib/types"
+import type { Book } from "@/lib/types"
 import { BellRing, BookOpen, Rss } from "lucide-react"
 
-type FeedChapter = Chapter & {
+type FeedChapter = {
+  id: string
+  title: string
+  order_index: number
+  updated_at: string
+  book_id: string
   books?: {
     id: string
     title: string
@@ -68,7 +73,7 @@ export default function FeedPage() {
     ])
 
     setBooks((bookRes.data || []) as Book[])
-    setChapters((chapterRes.data || []) as FeedChapter[])
+    setChapters(((chapterRes.data || []) as unknown) as FeedChapter[])
     setLoading(false)
   }, [])
 

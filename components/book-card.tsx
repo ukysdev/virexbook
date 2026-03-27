@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Eye, Heart, BookOpen, ShieldCheck, Star } from "lucide-react"
+import { Eye, Heart, BookOpen, ShieldCheck, Star, Headphones } from "lucide-react"
 import type { Book } from "@/lib/types"
 
 interface BookCardProps {
@@ -32,6 +32,12 @@ export function BookCard({ book }: BookCardProps) {
 
         {/* Badges overlay */}
         <div className="absolute left-2 top-2 flex flex-col gap-1">
+          {book.has_audio && (
+            <Badge className="gap-1 bg-sky-500 px-1.5 py-0.5 text-[10px] text-white">
+              <Headphones className="h-3 w-3" />
+              Audiobook
+            </Badge>
+          )}
           {book.is_original && (
             <Badge className="bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 gap-1">
               <ShieldCheck className="h-3 w-3" />

@@ -24,6 +24,7 @@ import {
   ChevronRight,
   Bookmark,
   BookmarkCheck,
+  Headphones,
 } from "lucide-react"
 import { toast } from "sonner"
 
@@ -230,6 +231,9 @@ export default function BookDetailPage() {
     )
   }
 
+  const audioChapters = chapters.filter((chapter) => Boolean(chapter.audio_url))
+  const firstAudioChapter = audioChapters[0] || null
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -263,6 +267,12 @@ export default function BookDetailPage() {
           {/* Details */}
           <div className="flex-1">
             <div className="flex flex-wrap gap-2 mb-3">
+              {audioChapters.length > 0 && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-sky-500/15 px-1.5 py-0.5 text-[10px] font-medium text-sky-600 dark:text-sky-300">
+                  <Headphones className="h-3 w-3" />
+                  Audiobook
+                </span>
+              )}
               {book.is_original && <VirexBadge type="original" size="sm" />}
               {book.is_staff_pick && <VirexBadge type="staff_pick" size="sm" />}
               {book.is_featured && <VirexBadge type="featured" size="sm" />}
@@ -317,6 +327,12 @@ export default function BookDetailPage() {
                 <FileText className="h-4 w-4" />
                 {chapters.length} chapters
               </span>
+              {audioChapters.length > 0 && (
+                <span className="flex items-center gap-1.5">
+                  <Headphones className="h-4 w-4" />
+                  {audioChapters.length} audio chapters
+                </span>
+              )}
               <span className="flex items-center gap-1.5">
                 <Globe className="h-4 w-4" />
                 {book.genre}
@@ -365,6 +381,17 @@ export default function BookDetailPage() {
                   <Button className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
                     <BookOpen className="h-4 w-4" />
                     Start Reading
+                  </Button>
+                </Link>
+              )}
+              {firstAudioChapter && (
+                <Link href={`/book/${bookId}/read/${firstAudioChapter.id}`}>
+                  <Button
+                    variant="outline"
+                    className="gap-2 border-sky-500/30 bg-sky-500/10 text-sky-700 hover:bg-sky-500/15 dark:text-sky-300"
+                  >
+                    <Headphones className="h-4 w-4" />
+                    Start Listening
                   </Button>
                 </Link>
               )}
@@ -440,6 +467,12 @@ export default function BookDetailPage() {
                           <FileText className="h-3 w-3" />
                           {chapter.word_count.toLocaleString()} words
                         </span>
+                        {chapter.audio_url && (
+                          <span className="flex items-center gap-1 text-sky-600 dark:text-sky-300">
+                            <Headphones className="h-3 w-3" />
+                            Audiobook
+                          </span>
+                        )}
                       </div>
                     </div>
                     <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
